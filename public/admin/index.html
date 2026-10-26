@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>S.I.C Studio</title>
+<link rel="icon" href="/img/sic-mark.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:ital,opsz,wght@1,6..96,400&family=Familjen+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="/admin/admin.css">
+<script src="/admin/admin.js" defer></script>
+</head>
+<body>
+
+<!-- Sign in -->
+<main class="login" id="login" hidden>
+  <form class="login-card" id="loginForm" novalidate>
+    <img src="/img/sic-mark.jpg" alt="" width="120" height="96">
+    <p class="mono gold">S.I.C STUDIO</p>
+    <h1>Sign in</h1>
+    <label class="f" for="lgEmail"><span>Email</span><input id="lgEmail" name="email" type="email" autocomplete="username" required></label>
+    <label class="f" for="lgPass"><span>Password</span><input id="lgPass" name="password" type="password" autocomplete="current-password" required></label>
+    <p class="err" id="loginErr" role="alert"></p>
+    <button class="btn" type="submit">Sign in</button>
+    <a class="back" href="/">Back to the website</a>
+  </form>
+</main>
+
+<!-- App -->
+<div class="app" id="app" hidden>
+  <aside class="side">
+    <a class="brand" href="/" target="_blank" rel="noopener"><img src="/img/sic-mark.jpg" alt=""><span>S.I.C <i>Studio</i></span></a>
+    <nav id="nav">
+      <a href="#overview" data-view="overview">Overview</a>
+      <a href="#leads" data-view="leads">Enquiries <b class="pill" id="navNew" hidden></b></a>
+      <a href="#referrals" data-view="referrals">Referrals <b class="pill" id="navRef" hidden></b></a>
+      <a href="#subscribers" data-view="subscribers">Mailing list</a>
+      <a href="#packages" data-view="packages">Packages</a>
+      <a href="#media" data-view="media">Showreel</a>
+      <a href="#settings" data-view="settings">Settings</a>
+    </nav>
+    <div class="side-foot">
+      <span class="mono" id="who"></span>
+      <button class="link" id="logout" type="button">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="banner" id="banner" hidden></div>
+
+    <!-- Overview -->
+    <section class="view" data-view="overview">
+      <header class="vh"><div><p class="mono gold">Overview</p><h1>Good <span id="greet">day</span>.</h1></div>
+        <a class="btn ghost sm" href="/" target="_blank" rel="noopener">View site ↗</a></header>
+      <div class="kpis" id="kpis"></div>
+      <div class="two">
+        <div class="card"><h2>Enquiries, last 30 days</h2><div id="chart" class="chart"></div></div>
+        <div class="card"><h2>Who is enquiring</h2><div id="byType"></div></div>
+      </div>
+      <div class="card"><div class="card-h"><h2>Latest enquiries</h2><a href="#leads" class="link">See all</a></div><div id="recent"></div></div>
+    </section>
+
+    <!-- Leads -->
+    <section class="view" data-view="leads" hidden>
+      <header class="vh"><div><p class="mono gold">Pipeline</p><h1>Enquiries</h1></div>
+        <a class="btn ghost sm" id="leadsCsv" href="/api/admin/leads.csv">Export CSV</a></header>
+      <div class="filters">
+        <label class="f inline" for="fq"><span>Search</span><input id="fq" type="search" placeholder="Name, email, handle or message"></label>
+        <label class="f inline" for="fstatus"><span>Status</span><select id="fstatus"><option value="">All</option><option value="new">New</option><option value="contacted">Contacted</option><option value="proposal">Proposal sent</option><option value="won">Won</option><option value="lost">Lost</option></select></label>
+        <label class="f inline" for="fkind"><span>Type</span><select id="fkind"><option value="">All</option><option value="enquiry">Enquiry</option><option value="private">Private Desk</option></select></label>
+      </div>
+      <div class="board" id="board"></div>
+    </section>
+
+    <!-- Referrals -->
+    <section class="view" data-view="referrals" hidden>
+      <header class="vh"><div><p class="mono gold">Bring one in, we cut one free</p><h1>Referrals</h1></div></header>
+      <div class="card flush"><div class="tbl" id="refTable"></div></div>
+    </section>
+
+    <!-- Subscribers -->
+    <section class="view" data-view="subscribers" hidden>
+      <header class="vh"><div><p class="mono gold">The audience you own</p><h1>Mailing list</h1></div>
+        <a class="btn ghost sm" href="/api/admin/subscribers.csv">Export CSV</a></header>
+      <div class="card flush"><div class="tbl" id="subTable"></div></div>
+    </section>
+
+    <!-- Packages -->
+    <section class="view" data-view="packages" hidden>
+      <header class="vh"><div><p class="mono gold">Shown in "Growth, packaged"</p><h1>Packages</h1></div>
+        <button class="btn sm" id="addPkg" type="button">Add package</button></header>
+      <div class="pkgs" id="pkgList"></div>
+    </section>
+
+    <!-- Media -->
+    <section class="view" data-view="media" hidden>
+      <header class="vh"><div><p class="mono gold">Hero phones and the reel strip</p><h1>Showreel</h1></div></header>
+      <form class="card media-form" id="mediaForm" novalidate>
+        <h2>Add a clip or photo</h2>
+        <div class="grid3">
+          <label class="f" for="mPlace"><span>Where it shows</span><select id="mPlace" name="placement">
+            <option value="showcase">Reel strip (many)</option><option value="hero-1">Hero phone, left</option><option value="hero-2">Hero phone, right</option></select></label>
+          <label class="f" for="mTitle"><span>Title</span><input id="mTitle" name="title" maxlength="80" placeholder="e.g. Studio session"></label>
+          <label class="f" for="mCaption"><span>Caption</span><input id="mCaption" name="caption" maxlength="140" placeholder="e.g. Cut for Reels · 1.2M views"></label>
+        </div>
+        <div class="grid2">
+          <label class="f" for="mFile"><span>Upload a file <i id="upNote"></i></span><input id="mFile" name="file" type="file" accept="video/*,image/*"></label>
+          <label class="f" for="mUrl"><span>Or paste a link (https)</span><input id="mUrl" name="url" type="url" placeholder="https://…/clip.mp4"></label>
+        </div>
+        <div class="row-end"><p class="err" id="mediaErr" role="alert"></p><button class="btn sm" type="submit">Add to site</button></div>
+      </form>
+      <div class="media-grid" id="mediaGrid"></div>
+    </section>
+
+    <!-- Settings -->
+    <section class="view" data-view="settings" hidden>
+      <header class="vh"><div><p class="mono gold">Contact details and alerts</p><h1>Settings</h1></div></header>
+      <form class="card" id="settingsForm" novalidate>
+        <div class="grid2">
+          <label class="f" for="sEmail"><span>Public contact email</span><input id="sEmail" name="contact_email" type="email" required></label>
+          <label class="f" for="sNotify"><span>Send new-enquiry alerts to</span><input id="sNotify" name="notify_email" type="email" placeholder="Defaults to the contact email"></label>
+          <label class="f" for="sWa"><span>WhatsApp number</span><input id="sWa" name="whatsapp" placeholder="e.g. 082 123 4567"></label>
+          <label class="f" for="sIg"><span>Instagram link</span><input id="sIg" name="instagram" placeholder="https://instagram.com/…"></label>
+          <label class="f" for="sTt"><span>TikTok link</span><input id="sTt" name="tiktok" placeholder="https://tiktok.com/@…"></label>
+          <label class="f" for="sYt"><span>YouTube link</span><input id="sYt" name="youtube" placeholder="https://youtube.com/@…"></label>
+        </div>
+        <div class="row-end"><p class="err" id="setErr" role="alert"></p><button class="btn sm" type="submit">Save settings</button></div>
+      </form>
+      <form class="card" id="pwForm" novalidate>
+        <h2>Change your password</h2>
+        <div class="grid2">
+          <label class="f" for="pwCur"><span>Current password</span><input id="pwCur" name="current" type="password" autocomplete="current-password"></label>
+          <label class="f" for="pwNew"><span>New password (10+ characters)</span><input id="pwNew" name="next" type="password" autocomplete="new-password" minlength="10"></label>
+        </div>
+        <div class="row-end"><p class="err" id="pwErr" role="alert"></p><button class="btn sm" type="submit">Update password</button></div>
+      </form>
+      <div class="card" id="health"></div>
+    </section>
+  </main>
+</div>
+
+<!-- Lead drawer -->
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-in" role="dialog" aria-modal="true" aria-labelledby="dName">
+    <button class="x" type="button" id="drawerClose" aria-label="Close">&times;</button>
+    <div id="drawerBody"></div>
+  </div>
+</aside>
+
+<!-- Package editor -->
+<dialog class="dlg" id="pkgDlg" aria-labelledby="pkgDlgTitle">
+  <form method="dialog" id="pkgForm" novalidate>
+    <h2 id="pkgDlgTitle">Package</h2>
+    <input type="hidden" name="id">
+    <div class="grid2">
+      <label class="f" for="pName"><span>Name</span><input id="pName" name="name" maxlength="60" required></label>
+      <label class="f" for="pLabel"><span>Short label</span><input id="pLabel" name="label" maxlength="60" placeholder="e.g. FULL CAMPAIGN"></label>
+    </div>
+    <label class="f" for="pFeat"><span>Features, one per line</span><textarea id="pFeat" name="features" rows="5"></textarea></label>
+    <div class="grid3">
+      <label class="f" for="pSort"><span>Order</span><input id="pSort" name="sort" type="number" value="0"></label>
+      <label class="check" for="pFeatured"><input id="pFeatured" name="featured" type="checkbox"> Highlight as most booked</label>
+      <label class="check" for="pActive"><input id="pActive" name="active" type="checkbox" checked> Show on the site</label>
+    </div>
+    <p class="err" id="pkgErr" role="alert"></p>
+    <div class="row-end"><button class="btn ghost sm" type="button" id="pkgCancel">Cancel</button><button class="btn sm" type="submit" value="save">Save package</button></div>
+  </form>
+</dialog>
+
+<!-- Confirm -->
+<dialog class="dlg small" id="confirmDlg">
+  <form method="dialog">
+    <h2 id="confirmText">Are you sure?</h2>
+    <p class="muted" id="confirmSub">This cannot be undone.</p>
+    <div class="row-end"><button class="btn ghost sm" value="no">Keep it</button><button class="btn danger sm" value="yes" id="confirmYes">Delete</button></div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

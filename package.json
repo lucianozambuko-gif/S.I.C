@@ -1,0 +1,28 @@
+{
+  "name": "sic-growth",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "smoke": "node scripts/smoke.js"
+  },
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.18.0",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.11.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^18.0.9",
+    "express": "^4.22.3",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^10.2.1"
+  },
+  "description": "S.I.C Growth website, enquiry API and admin dashboard"
+}

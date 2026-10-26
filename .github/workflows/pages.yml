@@ -1,0 +1,43 @@
+# Static preview of the public site on GitHub Pages.
+# Pages has no server, so the forms, live content and /admin only work on the Render deploy.
+name: Deploy preview to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build static site
+        env:
+          BASE: /${{ github.event.repository.name }}/
+        run: |
+          mkdir _site
+          cp -r public/. _site/
+          rm -rf _site/admin
+          # Project pages live under /<repo>/, so root-relative asset links need the prefix
+          sed -i -E "s#(href|src)=\"/#\1=\"${BASE}#g" _site/*.html
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -382,6 +382,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:1
 }
 @media(max-width:480px){
   .sk-grid{grid-template-columns:1fr 1fr}
+  .cad{grid-template-columns:1fr}
   .sk{min-height:160px;padding:22px 16px}
   .sk h3{font-size:24px}
   .shorts{grid-template-columns:repeat(4,1fr)}.shorts div:nth-child(5){display:none}

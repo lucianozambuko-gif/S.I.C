@@ -34,6 +34,8 @@ jobs:
           rm -rf _site/admin
           # Project pages live under /<repo>/, so root-relative asset links need the prefix
           sed -i -E "s#(href|src)=\"/#\1=\"${BASE}#g" _site/*.html
+          # Pages caches files for 10 minutes; a per-commit query makes phones fetch fresh CSS/JS
+          sed -i -E "s#(${BASE}(css|js)/[a-z-]+\.(css|js))\"#\1?v=${GITHUB_SHA::7}\"#g" _site/*.html
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

@@ -70,7 +70,9 @@ html,main{overflow-x:clip}
 @keyframes rise{from{transform:translateY(105%) skewY(6deg)}}
 .hero h1 .hot{font-family:var(--serif);font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.025em;font-size:1.04em;padding:0 .08em .14em 0;line-height:1.02;color:transparent;background:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;animation:rise 1.1s calc(var(--intro) + .24s) cubic-bezier(.2,.9,.2,1) both,sheen 6s linear infinite}
 @keyframes sheen{to{background-position:-220% 0}}
-.swap{display:inline-grid;vertical-align:top;height:1.55em;height:1lh;overflow:hidden}
+/* baseline-aligned so the word sits on the sentence's line whatever the font metrics or text scaling;
+   overflow:clip (unlike hidden) doesn't move the baseline to the box bottom */
+.swap{display:inline-grid;vertical-align:baseline;overflow:hidden;overflow:clip}
 .swap i{font-style:normal;grid-area:1/1;animation:swap 10s infinite;opacity:0}
 .swap i:nth-child(2){animation-delay:2s}.swap i:nth-child(3){animation-delay:4s}.swap i:nth-child(4){animation-delay:6s}.swap i:nth-child(5){animation-delay:8s}
 @keyframes swap{0%{opacity:0;transform:translateY(100%)}2%,19%{opacity:1;transform:none}21%,100%{opacity:0;transform:translateY(-100%)}}

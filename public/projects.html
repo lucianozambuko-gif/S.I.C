@@ -15,7 +15,7 @@
 <link rel="icon" href="/img/sic-mark.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400;1,6..96,500&family=Familjen+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400;1,6..96,500&family=Familjen+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Press+Start+2P&display=swap">
 <link rel="stylesheet" href="/css/site.css">
 <script src="/js/site.js" defer></script>
 <script src="/js/projects.js" defer></script>
@@ -54,18 +54,35 @@
   <div class="wrap">
     <span class="eyebrow">Selected work<span id="pCount"></span></span>
     <h1>
-      <span class="ln"><span>Projects that</span></span>
-      <span class="ln"><span class="hot">moved the needle.</span></span>
+      <span class="ln"><span>Choose your</span></span>
+      <span class="ln"><span class="hot">project.</span></span>
     </h1>
-    <p class="lede">Campaigns, clips and shoots for South African artists, athletes, personalities and brands. Open any project to see the work.</p>
+    <p class="lede">Every project starts locked. <span class="fine-only">Hover</span><span class="touch-only">Tap</span> a fighter to unlock it, unlock them all to complete the roster, then open any one to see the work.</p>
   </div>
 </section>
 
-<section class="gut work" style="padding-top:0">
+<section class="gut arcade" style="padding-top:0">
   <div class="wrap">
-    <div class="chips" id="chips" aria-label="Filter projects"></div>
-    <p class="sample-note" id="sampleNote" hidden>Preview: these are sample entries. Real projects appear here once they're added in S.I.C Studio.</p>
-    <ol class="plist" id="plist"></ol>
+    <div class="hud">
+      <div class="hud-p1">
+        <span class="px tag">P1</span>
+        <div class="hud-meter">
+          <span class="px" id="hudCount">UNLOCKED 0/0</span>
+          <span class="hud-bar"><i id="hudBar"></i></span>
+        </div>
+      </div>
+      <div class="hud-mid px"><span>TIME</span><b id="hudTime">99</b></div>
+      <div class="hud-r px"><span>CREDITS 01</span><button class="px replay" id="replay" type="button" hidden>PLAY AGAIN</button></div>
+    </div>
+    <div class="teams" id="teams" aria-label="Projects by topic"></div>
+    <p class="sample-note" id="sampleNote" hidden>Preview: these are sample entries using the S.I.C logo. Real projects, with client faces and logos, appear here once they're added in S.I.C Studio.</p>
+    <p class="px select-title" aria-hidden="true">SELECT YOUR PROJECT</p>
+    <div class="cselect" id="cselect"></div>
+    <div class="complete" id="complete" hidden>
+      <p class="px c-title">ALL PROJECTS UNLOCKED</p>
+      <p class="c-sub">Roster complete. Your name could be next.</p>
+      <a class="px press-start" href="/contact">PRESS START</a>
+    </div>
     <div class="pempty" id="pEmpty" hidden>
       <h2>New work is <em class="serif-em">on its way.</em></h2>
       <p>We're adding recent campaigns now. In the meantime, tell us what you want to grow.</p>
@@ -89,9 +106,6 @@
   <span class="socials" id="socials" data-socials></span>
   <span>&copy; <span id="yr">2026</span> S.I.C</span>
 </div></footer>
-
-<!-- Floating preview that follows the pointer over the list (desktop) -->
-<div class="pcard" id="pcard" aria-hidden="true"><div class="pcard-in" id="pcardIn"></div></div>
 
 <!-- Project viewer -->
 <dialog class="pview" id="pview" aria-labelledby="pvTitle">

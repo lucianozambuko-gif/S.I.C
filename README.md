@@ -13,7 +13,7 @@ The S.I.C (Service Investment Connections) website with a working back end: enqu
 | **Refer someone** | The referral form. It's tracked through New → Contacted → Signed on → Free clip given. |
 | **Join the list** | The visitor is added to the mailing list and sent a welcome email with a one-click unsubscribe link. |
 | Opens `/#enquire`, `/#private` or `/#refer` | The matching form opens automatically. Useful for Instagram bios and WhatsApp messages. |
-| Browses **/projects** | Projects from the dashboard. On desktop, hovering a project shows a floating preview of its clip; on phones, each one lights up as it scrolls past. Opening one shows the clip, write-up and a "Start a project like this" link. |
+| Browses **/projects** | A fighter-select roster of the projects from the dashboard. Each starts locked (a dark silhouette); hovering (or tapping on a phone) unlocks it with an arcade flash. Unlock them all and the roster completes. A scoreboard shows how many projects there are per topic. Opening one shows the clip, write-up and a "Start a project like this" link. A project without a photo or clip shows the S.I.C mark. |
 | Uses **/contact** | The full enquiry form on its own page, with a Project / Private Desk switch. It saves to the dashboard like the pop-up form. Links: `/contact?package=Scale`, `/contact?private`, `/contact?project=Name`. |
 
 **Dashboard (`/admin`)**

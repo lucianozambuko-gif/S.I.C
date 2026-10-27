@@ -149,6 +149,31 @@ html,main{overflow-x:clip}
   .statement h2 .w{animation:lit linear both;animation-timeline:view();animation-range:cover 10% cover 45%}
   @keyframes lit{from{color:rgba(245,238,228,.18)}}
 }
+/* JS fallback for the reveal; `backwards` so hover/tilt transforms still apply once it ends */
+.rv-js .rv:not(.on){opacity:0}
+.rv-js .rv.on{animation:rvIn .9s var(--d,0s) cubic-bezier(.2,.9,.2,1) backwards}
+@keyframes rvIn{from{opacity:0;transform:translateY(50px)}}
+.rv-js .statement h2 .w{transition:color .6s var(--d,0s)}
+.rv-js .statement h2:not(.on) .w{color:rgba(245,238,228,.18)!important}
+
+/* touch: hover effects triggered in view (.hot), tap feedback */
+@media(pointer:coarse){
+  .sk.hot{animation:sweep 1.6s cubic-bezier(.2,.9,.2,1)}
+  .sk.hot::before{opacity:1}
+  @keyframes sweep{from{--mx:-40%;--my:20%}}
+  .sk.hot svg{transform:scale(1.15) rotate(-8deg)}
+  .tier.hot{transform:translateY(-8px);border-color:rgba(242,166,74,.5)}
+  .row.hot::before{transform:scaleY(1)}
+  .row.hot h3{transform:translateX(18px);color:#1a0f06}
+  .row.hot span{color:#1a0f06}
+  .pillar.hot{transform:translateY(-6px)}
+  .btn:active{transform:scale(.95)}
+  .btn.tap::after{animation:shine .7s}
+  @keyframes shine{from{transform:translateX(-120%)}to{transform:translateX(120%)}}
+  .ripple{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,243,214,.55),rgba(242,166,74,.25) 40%,transparent 70%);transform:scale(0);pointer-events:none;animation:ripple .65s cubic-bezier(.2,.9,.2,1) forwards}
+  @keyframes ripple{to{transform:scale(1);opacity:0}}
+  .glow{width:360px;height:360px;margin:80px 0 0 80px}
+}
 
 /* skills grid */
 .skills-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:44px}
@@ -156,6 +181,8 @@ html,main{overflow-x:clip}
 .skills-head p{color:var(--dust);max-width:38ch}
 .sk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:22px;overflow:hidden}
 .sk{position:relative;background:var(--night);padding:30px 24px 28px;min-height:190px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;cursor:default}
+@property --mx{syntax:'<length-percentage>';inherits:true;initial-value:50%}
+@property --my{syntax:'<length-percentage>';inherits:true;initial-value:50%}
 .sk::before{content:"";position:absolute;inset:0;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(242,166,74,.22),transparent 60%);opacity:0;transition:opacity .3s}
 .sk:hover::before{opacity:1}
 .sk svg{width:34px;height:34px;stroke:var(--amber);fill:none;stroke-width:1.6;transition:transform .4s cubic-bezier(.2,.9,.2,1)}

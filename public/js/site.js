@@ -121,6 +121,68 @@
     stage.addEventListener('pointerleave', () => (mark.style.transform = ''));
   }
 
+  /* ============ Touch: the phone versions of the pointer effects ============ */
+  if (!fine && !reduce) {
+    // Finger glow; the rosettes read the same `mouse` and part around the finger.
+    const glowAt = (t) => {
+      mouse.x = t.clientX; mouse.y = t.clientY;
+      glow.style.transform = `translate(${t.clientX - 260}px,${t.clientY - 260}px)`;
+    };
+    addEventListener('touchstart', (e) => { glowAt(e.touches[0]); glow.style.opacity = 1; }, { passive: true });
+    addEventListener('touchmove', (e) => glowAt(e.touches[0]), { passive: true });
+    addEventListener('touchend', () => { glow.style.opacity = 0; mouse.x = mouse.y = -999; }, { passive: true });
+
+    // Buttons: ripple from the tap point plus the desktop shine sweep.
+    document.addEventListener('pointerdown', (e) => {
+      const b = e.target.closest('.btn');
+      if (!b) return;
+      const r = b.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2.2;
+      const rp = document.createElement('span');
+      rp.className = 'ripple';
+      rp.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`;
+      b.appendChild(rp);
+      rp.addEventListener('animationend', () => rp.remove());
+      b.classList.remove('tap'); void b.offsetWidth; b.classList.add('tap');
+    });
+    document.addEventListener('animationend', (e) => e.target.classList?.contains('tap') && e.target.classList.remove('tap'));
+
+    // Hover effects play as each card passes through the middle of the screen.
+    const mid = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('hot', e.isIntersecting)),
+      { rootMargin: '-38% 0px -38% 0px' });
+    const watchHot = () => $$('.sk,.tier,.row,.pillar').forEach((el) => mid.observe(el));
+    watchHot();
+    new MutationObserver(watchHot).observe($('#tiers'), { childList: true });
+
+    // Tilt: phone motion sensor where allowed, a slow sway otherwise.
+    const tilted = new Set();
+    const tiltIO = new IntersectionObserver((es) => es.forEach((e) => {
+      e.isIntersecting ? tilted.add(e.target) : tilted.delete(e.target);
+      if (tilted.size && !tiltOn) { tiltOn = true; requestAnimationFrame(tilt); }
+    }));
+    const mark = $('#mark');
+    [mark, ...$$('.tilt')].forEach((el) => tiltIO.observe(el));
+    let tiltOn = false, sensor = null, sx = 0, sy = 0;
+    addEventListener('deviceorientation', (e) => {
+      if (e.gamma == null) return;
+      sensor = { x: Math.max(-1, Math.min(1, e.gamma / 30)) / 2, y: Math.max(-1, Math.min(1, (e.beta - 45) / 30)) / 2 };
+    });
+    if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) {
+      // iOS only hands out sensor data after a tap.
+      addEventListener('touchend', () => DeviceOrientationEvent.requestPermission().catch(() => {}), { once: true });
+    }
+    function tilt(t) {
+      if (!tilted.size) { tiltOn = false; return; }
+      const tx = sensor ? sensor.x : Math.sin(t / 2600) * 0.35, ty = sensor ? sensor.y : Math.cos(t / 3400) * 0.3;
+      sx += (tx - sx) * 0.08; sy += (ty - sy) * 0.08;
+      tilted.forEach((el) => {
+        el.style.transform = el === mark
+          ? `perspective(800px) rotateY(${sx * 18}deg) rotateX(${-sy * 18}deg) translateZ(20px)`
+          : `perspective(900px) rotateY(${sx * 7}deg) rotateX(${-sy * 7}deg)`;
+      });
+      requestAnimationFrame(tilt);
+    }
+  }
+
   /* ============ Clipping demo ============ */
   const lf = $('#longform'), sh = $('#shorts');
   const plats = ['TikTok', 'Reels', 'Shorts', 'TikTok', 'Reels'];
@@ -155,6 +217,20 @@
     })(st);
   }), { threshold: 0.6 });
   $$('.count').forEach((c) => io.observe(c));
+
+  /* Scroll reveals for browsers without CSS scroll timelines (Firefox, older iPhones). */
+  if (!reduce && !CSS.supports('animation-timeline: view()')) {
+    document.documentElement.classList.add('rv-js');
+    const seen = new IntersectionObserver((es) => {
+      es.filter((e) => e.isIntersecting).forEach((e, i) => {
+        seen.unobserve(e.target);
+        e.target.style.setProperty('--d', i * 0.09 + 's');
+        e.target.classList.add('on');
+      });
+    }, { rootMargin: '0px 0px -12% 0px' });
+    $$('.rv,.statement h2').forEach((el) => seen.observe(el));
+    $$('.statement h2 .w').forEach((w, i) => w.style.setProperty('--d', i * 0.07 + 's'));
+  }
 
   $('#yr').textContent = new Date().getFullYear();
 

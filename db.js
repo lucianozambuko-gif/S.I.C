@@ -52,6 +52,12 @@ const schema = [
     url TEXT NOT NULL, public_id TEXT, resource_type TEXT NOT NULL DEFAULT 'video',
     placement TEXT NOT NULL DEFAULT 'showcase', sort INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL)`,
+  `CREATE TABLE IF NOT EXISTS projects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL, client TEXT NOT NULL DEFAULT '', category TEXT NOT NULL DEFAULT '',
+    year TEXT NOT NULL DEFAULT '', summary TEXT NOT NULL DEFAULT '', link TEXT NOT NULL DEFAULT '',
+    url TEXT, public_id TEXT, resource_type TEXT NOT NULL DEFAULT 'video',
+    sort INTEGER NOT NULL DEFAULT 0, active INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL)`,
   `CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL DEFAULT '')`,
   `CREATE TABLE IF NOT EXISTS admins (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

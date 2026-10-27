@@ -114,11 +114,13 @@
       c.style.setProperty('--my', e.clientY - r.top + 'px');
     }));
     const stage = $('#stage'), mark = $('#mark');
-    stage.addEventListener('pointermove', (e) => {
-      const r = stage.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
-      mark.style.transform = `perspective(800px) rotateY(${x * 18}deg) rotateX(${-y * 18}deg) translateZ(20px)`;
-    });
-    stage.addEventListener('pointerleave', () => (mark.style.transform = ''));
+    if (stage) {
+      stage.addEventListener('pointermove', (e) => {
+        const r = stage.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        mark.style.transform = `perspective(800px) rotateY(${x * 18}deg) rotateX(${-y * 18}deg) translateZ(20px)`;
+      });
+      stage.addEventListener('pointerleave', () => (mark.style.transform = ''));
+    }
   }
 
   /* ============ Touch: the phone versions of the pointer effects ============ */
@@ -149,9 +151,9 @@
     // Hover effects play as each card passes through the middle of the screen.
     const mid = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('hot', e.isIntersecting)),
       { rootMargin: '-38% 0px -38% 0px' });
-    const watchHot = () => $$('.sk,.tier,.row,.pillar').forEach((el) => mid.observe(el));
+    const watchHot = () => $$('.sk,.tier,.row,.pillar,.ccard').forEach((el) => mid.observe(el));
     watchHot();
-    new MutationObserver(watchHot).observe($('#tiers'), { childList: true });
+    if ($('#tiers')) new MutationObserver(watchHot).observe($('#tiers'), { childList: true });
 
     // Tilt: phone motion sensor where allowed, a slow sway otherwise.
     const tilted = new Set();
@@ -160,7 +162,7 @@
       if (tilted.size && !tiltOn) { tiltOn = true; requestAnimationFrame(tilt); }
     }));
     const mark = $('#mark');
-    [mark, ...$$('.tilt')].forEach((el) => tiltIO.observe(el));
+    [mark, ...$$('.tilt')].filter(Boolean).forEach((el) => tiltIO.observe(el));
     let tiltOn = false, sensor = null, sx = 0, sy = 0;
     addEventListener('deviceorientation', (e) => {
       if (e.gamma == null) return;
@@ -186,7 +188,7 @@
   /* ============ Clipping demo ============ */
   const lf = $('#longform'), sh = $('#shorts');
   const plats = ['TikTok', 'Reels', 'Shorts', 'TikTok', 'Reels'];
-  [0.14, 0.31, 0.5, 0.68, 0.85].forEach((p, i) => {
+  if (lf) [0.14, 0.31, 0.5, 0.68, 0.85].forEach((p, i) => {
     const c = document.createElement('i');
     c.className = 'cut'; c.style.left = p * 100 + '%'; c.style.animationDelay = p * 4 - 4 + 's';
     lf.appendChild(c);
@@ -195,7 +197,7 @@
     sh.appendChild(d);
   });
   const tc = $('#tc'), t0 = performance.now();
-  if (!reduce) (function tick(n) {
+  if (tc && !reduce) (function tick(n) {
     const s = Math.floor((((n - t0) % 4000) / 4000) * 2538);
     tc.textContent = `00:${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
     requestAnimationFrame(tick);
@@ -203,7 +205,7 @@
 
   const cc = $('#clipCount');
   let clips = 24;
-  if (!reduce) setInterval(() => { clips = clips >= 96 ? 24 : clips + 1; cc.textContent = clips; }, 1400);
+  if (cc && !reduce) setInterval(() => { clips = clips >= 96 ? 24 : clips + 1; cc.textContent = clips; }, 1400);
 
   /* Count-up numbers: the final value is already in the markup. */
   const io = new IntersectionObserver((es) => es.forEach((e) => {
@@ -236,16 +238,22 @@
 
   /* ============ API helper ============ */
   async function api(url, body) {
-    const res = await fetch(url, {
-      method: body ? 'POST' : 'GET',
-      headers: body ? { 'Content-Type': 'application/json' } : {},
-      body: body ? JSON.stringify(body) : undefined,
-    });
+    let res;
+    try {
+      res = await fetch(url, {
+        method: body ? 'POST' : 'GET',
+        headers: body ? { 'Content-Type': 'application/json' } : {},
+        body: body ? JSON.stringify(body) : undefined,
+      });
+    } catch {
+      throw Object.assign(new Error('We could not reach our server. Check your connection and try again.'), { offline: true });
+    }
     let data = {};
     try { data = await res.json(); } catch { /* empty body */ }
     if (!res.ok) {
       const err = new Error(data.error || 'We could not send that. Check your connection and try again.');
       err.field = data.field;
+      err.offline = !data.error; // our API always explains its errors; anything else means it isn't there (e.g. a static host)
       throw err;
     }
     return data;
@@ -259,12 +267,12 @@
   }
   function fillAllSelects() {
     $$('select[data-options]').forEach((s) => fillSelect(s, OPTIONS[s.dataset.options] || [], s.dataset.placeholder));
-    fillSelect($('#ePkg'), [...PACKAGES, 'Not sure yet'], 'Choose a package');
+    $$('select[data-packages]').forEach((s) => fillSelect(s, [...PACKAGES, 'Not sure yet'], 'Choose a package'));
   }
   fillAllSelects();
 
   function renderPackages(list) {
-    if (!list.length) return;
+    if (!list.length || !$('#tiers')) return;
     $('#tiers').innerHTML = list.map((p) => `
       <div class="tier${p.featured ? ' mid foil' : ''}">
         ${p.featured ? '<span class="flag">MOST BOOKED</span>' : ''}
@@ -294,7 +302,7 @@
     });
     // Showreel strip.
     const show = media.filter((x) => x.placement === 'showcase');
-    if (!show.length) return;
+    if (!show.length || !$('#reelStrip')) return;
     $('#reelStrip').innerHTML = show.map((m) => `
       <figure class="rc" tabindex="0">
         ${videoEl(m, '')}
@@ -315,20 +323,25 @@
     });
   }
 
+  let waNumber = '';
   function renderSettings(s) {
-    if (s.contact_email) {
-      const mail = $('#mail');
+    const mail = $('#mail');
+    if (s.contact_email && mail) {
       mail.textContent = s.contact_email;
       mail.href = `mailto:${s.contact_email}`;
     }
     if (s.whatsapp) {
-      const n = s.whatsapp.replace(/[^\d]/g, '').replace(/^0/, '27');
+      waNumber = s.whatsapp.replace(/[^\d]/g, '').replace(/^0/, '27');
       const wa = $('#waLink');
-      wa.href = `https://wa.me/${n}?text=${encodeURIComponent("Hi S.I.C, I'd like to talk about a project.")}`;
-      wa.hidden = false;
+      if (wa) {
+        wa.href = `https://wa.me/${waNumber}?text=${encodeURIComponent("Hi S.I.C, I'd like to talk about a project.")}`;
+        wa.hidden = false;
+      }
+      if ($('#waCard')) $('#waCard').hidden = false;
     }
     const links = [['Instagram', s.instagram], ['TikTok', s.tiktok], ['YouTube', s.youtube]].filter(([, u]) => u);
-    $('#socials').innerHTML = links.map(([n, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${n}</a>`).join('');
+    $$('[data-socials]').forEach((el) => (el.innerHTML = links.map(([n, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${n}</a>`).join('')));
+    if (links.length && $('#socialCard')) $('#socialCard').hidden = false;
   }
 
   api('/api/content')
@@ -341,8 +354,101 @@
     })
     .catch(() => { /* keep the built-in content */ });
 
-  /* ============ Modal forms ============ */
+  /* ============ Mobile menu ============ */
+  const menuBtn = $('#menuBtn');
+  if (menuBtn) {
+    const setMenu = (open) => {
+      document.body.classList.toggle('menu-open', open);
+      menuBtn.setAttribute('aria-expanded', String(open));
+      menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+    menuBtn.addEventListener('click', () => setMenu(!document.body.classList.contains('menu-open')));
+    $('#mnav').addEventListener('click', (e) => e.target.closest('a') && setMenu(false));
+    addEventListener('keydown', (e) => e.key === 'Escape' && setMenu(false));
+  }
+
+  /* ============ Copy email ============ */
+  const cp = $('#copy'), mail = $('#mail');
+  if (cp) cp.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(mail.textContent);
+      cp.textContent = 'Copied';
+    } catch {
+      const r = document.createRange();
+      r.selectNodeContents(mail);
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      cp.textContent = 'Selected';
+    }
+    setTimeout(() => (cp.textContent = 'Copy email'), 1800);
+  });
+
+  /* ============ Contact page form ============ */
+  const cForm = $('#contactForm');
+  if (cForm) {
+    const panel = $('#cPanel'), cDone = $('#cDone'), cOff = $('#cOffline');
+    const setKind = (k) => {
+      cForm.classList.toggle('is-private', k === 'private');
+      $('button[type=submit]', cForm).firstChild.textContent = k === 'private' ? 'Request consultation ' : 'Send enquiry ';
+    };
+    cForm.addEventListener('change', (e) => { if (e.target.name === 'kind') setKind(e.target.value); });
+    // Deep links: /contact?package=Scale, ?project=Album+launch, ?private
+    const qs = new URLSearchParams(location.search);
+    if (qs.has('private')) { cForm.elements.kind.value = 'private'; setKind('private'); }
+    if (qs.get('package')) { const p = qs.get('package'); if (!PACKAGES.includes(p)) PACKAGES.push(p); fillAllSelects(); cForm.elements.package.value = p; }
+    if (qs.get('project')) cForm.elements.message.value = `I saw "${qs.get('project').slice(0, 80)}" on your Projects page and want something like it. `;
+
+    cForm.addEventListener('input', (e) => {
+      const f = e.target.closest('.f');
+      if (!f) return;
+      f.classList.remove('bad');
+      const slot = f.querySelector('[data-err]');
+      if (slot) slot.textContent = '';
+    });
+    const show = (el) => { [cForm, cDone, cOff].forEach((x) => (x.hidden = x !== el)); panel.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); };
+    $$('[data-again]').forEach((b) => b.addEventListener('click', () => show(cForm)));
+
+    cForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearErrors(cForm);
+      if (!validateLocally(cForm)) return;
+      const data = Object.fromEntries(new FormData(cForm));
+      const btn = $('button[type=submit]', cForm), label = btn.firstChild.textContent;
+      btn.disabled = true;
+      btn.firstChild.textContent = 'Sending… ';
+      try {
+        await api('/api/leads', data);
+        $('#cDoneTitle').textContent = `Thank you, ${data.name.trim().split(' ')[0]}.`;
+        $('#cDoneText').textContent = data.kind === 'private'
+          ? 'Your request has gone straight to our senior team. Expect a personal reply within one working day.'
+          : "Your enquiry is with our team. We'll reply within one working day, and a confirmation is on its way to your inbox.";
+        cForm.reset();
+        setKind('enquiry');
+        fillAllSelects();
+        show(cDone);
+      } catch (err) {
+        if (!err.offline) return showFieldError(cForm, err.field, err.message);
+        // No server behind this copy of the site: hand the message to email or WhatsApp instead of losing it.
+        const body = [
+          `Name: ${data.name}`, `Email: ${data.email}`, data.phone && `Phone: ${data.phone}`, `What I do: ${data.client_type}`,
+          data.handle && `Social: ${data.handle}`, data.audience && `Audience: ${data.audience}`, data.package && `Package: ${data.package}`,
+          data.budget && `Budget: ${data.budget}`, data.contact_pref && `Best way to reach me: ${data.contact_pref}`,
+        ].filter(Boolean).join('\n') + `\n\n${data.message}`;
+        const subject = `${data.kind === 'private' ? 'Private Desk request' : 'Project enquiry'}: ${data.name}`;
+        $('#offMail').href = `mailto:${mail.textContent.trim()}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        const offWa = $('#offWa');
+        offWa.hidden = !waNumber;
+        if (waNumber) offWa.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(`${subject}\n\n${body}`)}`;
+        show(cOff);
+      } finally {
+        btn.disabled = false;
+        btn.firstChild.textContent = label;
+      }
+    });
+  }
+
+  /* Everything below drives the home page's modal forms and mailing list. */
   const modal = $('#modal');
+  if (!modal) return;
   const eForm = $('#enquiryForm'), rForm = $('#referralForm'), done = $('#mDone');
   const COPY = {
     enquiry: { crest: 'ENQUIRY', title: 'Start a project', lede: 'Tell us who you are and what you want to grow. We reply within one working day.', button: 'Send enquiry' },
@@ -493,21 +599,6 @@
     } finally {
       btn.disabled = false;
     }
-  });
-
-  /* ============ Copy email ============ */
-  const cp = $('#copy'), mail = $('#mail');
-  cp.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(mail.textContent);
-      cp.textContent = 'Copied';
-    } catch {
-      const r = document.createRange();
-      r.selectNodeContents(mail);
-      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
-      cp.textContent = 'Selected';
-    }
-    setTimeout(() => (cp.textContent = 'Copy email'), 1800);
   });
 
   // Deep link: /#enquire, /#private or /#refer opens the matching form.

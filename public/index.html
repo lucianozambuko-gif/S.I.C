@@ -38,11 +38,22 @@
   <div class="wrap">
     <a class="brand" href="#top"><img src="/img/sic-mark.jpg" alt=""><b>S.I.C</b></a>
     <nav aria-label="Main">
-      <a href="#work">Who we scale</a><a href="#clipping">Clipping</a><a href="#packages">Packages</a><a href="#process">Process</a><a href="#reel" id="navReel" hidden>Reel</a><a href="#desk">Private Desk</a>
+      <a href="#work">Who we scale</a><a href="#clipping" class="opt">Clipping</a><a href="#packages">Packages</a><a href="#process" class="opt">Process</a><a href="#reel" id="navReel" hidden>Reel</a><a href="#desk">Private Desk</a><a href="/projects">Projects</a><a href="/contact">Contact</a>
     </nav>
-    <a href="#contact" data-open="enquiry" class="btn sm magnet">Book a project <span class="ar">→</span></a>
+    <div class="nav-end">
+      <a href="#contact" data-open="enquiry" class="btn sm magnet">Book a project <span class="ar">→</span></a>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mnav"><i></i><i></i></button>
+    </div>
   </div>
 </header>
+<nav class="mnav" id="mnav" aria-label="Menu">
+  <a href="#work" style="--i:0"><small>01</small>Who we scale</a>
+  <a href="#clipping" style="--i:1"><small>02</small>Clipping</a>
+  <a href="#packages" style="--i:2"><small>03</small>Packages</a>
+  <a href="#desk" style="--i:3"><small>04</small>Private Desk</a>
+  <a href="/projects" style="--i:4"><small>05</small>Projects</a>
+  <a href="/contact" style="--i:5"><small>06</small>Contact</a>
+</nav>
 
 <main id="top">
 
@@ -340,7 +351,8 @@
 
 <footer class="gut"><div class="wrap">
   <span>S.I.C, Service Investment Connections · Johannesburg, South Africa · Est. 2016</span>
-  <span class="socials" id="socials"></span>
+  <span class="socials foot-links"><a href="/projects">Projects</a><a href="/contact">Contact</a></span>
+  <span class="socials" id="socials" data-socials></span>
   <span>&copy; <span id="yr">2026</span> S.I.C</span>
 </div></footer>
 
@@ -362,7 +374,7 @@
       <label class="f" for="eType"><span>What you do *</span><select id="eType" name="client_type" required data-options="clientTypes" data-placeholder="Choose one"></select><em data-err="client_type"></em></label>
       <label class="f" for="eHandle"><span>Main social link or handle</span><input id="eHandle" name="handle" maxlength="200" placeholder="@yourhandle or a link"><em data-err="handle"></em></label>
       <label class="f" for="eAud"><span>Audience size</span><select id="eAud" name="audience" data-options="audience" data-placeholder="Across all platforms"></select><em data-err="audience"></em></label>
-      <label class="f" for="ePkg"><span>Package</span><select id="ePkg" name="package"></select><em data-err="package"></em></label>
+      <label class="f" for="ePkg"><span>Package</span><select id="ePkg" name="package" data-packages></select><em data-err="package"></em></label>
       <label class="f" for="eBudget"><span>Monthly budget</span><select id="eBudget" name="budget" data-options="budget" data-placeholder="Choose a range"></select><em data-err="budget"></em></label>
       <label class="f private-only" for="ePref"><span>Best way to reach you</span><select id="ePref" name="contact_pref" data-options="contactPref" data-placeholder="Choose one"></select><em data-err="contact_pref"></em></label>
     </div>

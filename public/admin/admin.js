@@ -97,13 +97,13 @@
     if (!ME.mailEnabled) warn.push('Email alerts are off: new enquiries are saved here, but nobody is emailed. Add SMTP settings to turn them on.');
     $('#banner').hidden = !warn.length;
     $('#banner').textContent = warn.join(' ');
-    $('#upNote').textContent = ME.mediaEnabled ? '(max 95 MB)' : '(needs Cloudinary; use a link for now)';
-    $('#mFile').disabled = !ME.mediaEnabled;
+    $('#upNote').textContent = $('#prUpNote').textContent = ME.mediaEnabled ? '(max 95 MB)' : '(needs Cloudinary; use a link for now)';
+    $('#mFile').disabled = $('#prFile').disabled = !ME.mediaEnabled;
     route();
   }
 
   /* ---------- router ---------- */
-  const views = { overview: loadOverview, leads: loadLeads, referrals: loadReferrals, subscribers: loadSubs, packages: loadPackages, media: loadMedia, settings: loadSettings };
+  const views = { overview: loadOverview, leads: loadLeads, referrals: loadReferrals, subscribers: loadSubs, packages: loadPackages, projects: loadProjects, media: loadMedia, settings: loadSettings };
   function route() {
     const v = location.hash.replace('#', '') || 'overview';
     const name = views[v] ? v : 'overview';
@@ -382,6 +382,77 @@
       toast('Package saved. It is live on the site.');
       loadPackages();
     } catch (err) { $('#pkgErr').textContent = err.message; }
+  });
+
+  /* ---------- projects ---------- */
+  let projs = [], projCats = [];
+  const mediaTag = (m) => (!m.url ? '<span class="no-media">No preview yet</span>'
+    : m.resource_type === 'image' ? `<img src="${esc(m.url)}" alt="" loading="lazy">`
+      : `<video src="${esc(m.url)}" muted loop playsinline preload="metadata"></video>`);
+  async function loadProjects() {
+    ({ projects: projs, categories: projCats } = await api('/api/admin/projects'));
+    $('#prCat').innerHTML = '<option value="">Choose one</option>' + projCats.map((c) => `<option>${esc(c)}</option>`).join('');
+    $('#projList').innerHTML = projs.map((p) => `<div class="proj${p.active ? '' : ' off'}">
+      <div class="thumb">${mediaTag(p)}</div>
+      <div class="proj-body">
+        <p class="mono gold">${esc([p.category, p.year].filter(Boolean).join(' · ') || 'Project')}${p.active ? '' : ' · HIDDEN'}</p>
+        <h3>${esc(p.title)}</h3>
+        ${p.client ? `<small class="muted">${esc(p.client)}</small>` : ''}
+        <div class="acts"><button class="btn ghost sm" data-editproj="${p.id}" type="button">Edit</button><button class="link" data-delproj="${p.id}" type="button">Delete</button></div>
+      </div></div>`).join('') || '<p class="empty">No projects yet. Add your first one and it appears on the Projects page straight away.</p>';
+    $$('#projList video').forEach((v) => {
+      v.parentElement.addEventListener('pointerenter', () => v.play().catch(() => {}));
+      v.parentElement.addEventListener('pointerleave', () => v.pause());
+    });
+  }
+  const projDlg = $('#projDlg'), projForm = $('#projForm');
+  function editProj(p) {
+    const f = projForm.elements;
+    $('#projDlgTitle').textContent = p ? `Edit ${p.title}` : 'New project';
+    projForm.reset();
+    f.id.value = p?.id || '';
+    for (const k of ['title', 'client', 'category', 'year', 'summary', 'link']) f[k].value = p?.[k] || '';
+    f.sort.value = p?.sort ?? 0;
+    f.active.checked = p ? Boolean(p.active) : true;
+    $('#prMedia').innerHTML = p?.url
+      ? `<div class="thumb">${mediaTag(p)}</div><div><p class="muted">Current preview. Upload or paste a new one to replace it.</p><label class="check"><input type="checkbox" name="remove_media" value="1"> Remove the preview</label></div>`
+      : '';
+    $('#projErr').textContent = '';
+    projDlg.showModal();
+  }
+  $('#addProj').addEventListener('click', () => editProj(null));
+  $('#projCancel').addEventListener('click', () => projDlg.close());
+  $('#projList').addEventListener('click', async (e) => {
+    const ed = e.target.closest('[data-editproj]');
+    if (ed) return editProj(projs.find((p) => p.id === Number(ed.dataset.editproj)));
+    const del = e.target.closest('[data-delproj]');
+    if (del && (await confirmBox('Delete this project?', 'It disappears from the website, and an uploaded preview is removed from Cloudinary.'))) {
+      await api(`/api/admin/projects/${del.dataset.delproj}`, { method: 'DELETE' });
+      toast('Project deleted');
+      loadProjects();
+    }
+  });
+  projForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = projForm.elements, btn = $('button[type=submit]', projForm);
+    const fd = new FormData(projForm);
+    if (!f.file.files.length) fd.delete('file');
+    fd.set('active', f.active.checked ? '1' : '0');
+    fd.delete('id');
+    btn.disabled = true;
+    btn.textContent = f.file.files.length ? 'Uploading…' : 'Saving…';
+    try {
+      if (f.id.value) await api(`/api/admin/projects/${f.id.value}`, { method: 'PUT', form: fd });
+      else await api('/api/admin/projects', { method: 'POST', form: fd });
+      projDlg.close();
+      toast('Project saved. It is live on the site.');
+      loadProjects();
+    } catch (err) {
+      $('#projErr').textContent = err.message;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save project';
+    }
   });
 
   /* ---------- media ---------- */

@@ -58,6 +58,22 @@ await call(`/api/admin/packages/${r.data.packages.find((p) => p.name === 'Icon')
 r = await call('/api/admin/media', { method: 'POST', body: undefined });
 ok(r.status === 400, 'media without file or link is rejected');
 
+r = await call('/api/admin/projects', { method: 'POST', body: { title: '', category: 'Artist' } });
+ok(r.status === 400 && r.data.field === 'title', 'project needs a name');
+r = await call('/api/admin/projects', { method: 'POST', body: { title: 'Smoke project', category: 'Artist', year: '20x5' } });
+ok(r.status === 400 && r.data.field === 'year', 'project rejects a bad year');
+r = await call('/api/admin/projects', { method: 'POST', body: { title: 'Smoke project', client: 'Test Client', category: 'Artist', year: '2025', summary: 'Clips.', url: 'https://example.com/clip.mp4' } });
+ok(r.status === 201 && r.data.resource_type === 'video', 'project created with a linked clip');
+const projId = r.data.id;
+r = await call(`/api/admin/projects/${projId}`, { method: 'PUT', body: { title: 'Smoke project', category: 'Brand', active: '0' } });
+ok(r.status === 200 && r.data.category === 'Brand' && r.data.url === 'https://example.com/clip.mp4', 'project edit keeps its clip');
+r = await call('/api/projects');
+ok(r.status === 200 && !r.data.some((p) => p.id === projId), 'hidden project is not public');
+await call(`/api/admin/projects/${projId}`, { method: 'PUT', body: { title: 'Smoke project', category: 'Brand', remove_media: '1' } });
+r = await call('/api/projects');
+ok(r.data.some((p) => p.id === projId && p.url === null), 'visible project is public, preview removed');
+await call(`/api/admin/projects/${projId}`, { method: 'DELETE' });
+
 r = await call('/api/admin/settings', { method: 'PUT', body: { contact_email: 'hello@sicagency.com', whatsapp: '082 123 4567', instagram: 'https://instagram.com/sic' } });
 ok(r.status === 200 && r.data.whatsapp === '0821234567', 'settings saved');
 r = await call('/api/content');

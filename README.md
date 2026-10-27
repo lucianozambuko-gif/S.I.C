@@ -13,6 +13,8 @@ The S.I.C (Service Investment Connections) website with a working back end: enqu
 | **Refer someone** | The referral form. It's tracked through New → Contacted → Signed on → Free clip given. |
 | **Join the list** | The visitor is added to the mailing list and sent a welcome email with a one-click unsubscribe link. |
 | Opens `/#enquire`, `/#private` or `/#refer` | The matching form opens automatically. Useful for Instagram bios and WhatsApp messages. |
+| Browses **/projects** | Projects from the dashboard. On desktop, hovering a project shows a floating preview of its clip; on phones, each one lights up as it scrolls past. Opening one shows the clip, write-up and a "Start a project like this" link. |
+| Uses **/contact** | The full enquiry form on its own page, with a Project / Private Desk switch. It saves to the dashboard like the pop-up form. Links: `/contact?package=Scale`, `/contact?private`, `/contact?project=Name`. |
 
 **Dashboard (`/admin`)**
 
@@ -20,6 +22,7 @@ The S.I.C (Service Investment Connections) website with a working back end: enqu
 - **Enquiries:** a pipeline board (New, Contacted, Proposal sent, Won, Lost). Drag cards between columns, or open one to see the details, reply by email, WhatsApp or call, add team notes, or delete. You can search, filter and export to CSV.
 - **Referrals, Mailing list:** track statuses, remove entries and export subscribers to CSV.
 - **Packages:** add, edit, reorder, hide or highlight the "Growth, packaged" tiers. Changes go live on the site immediately.
+- **Projects:** add, edit, reorder or hide the work shown on `/projects`: name, client, category, year, write-up, an optional link, and a preview clip or photo (uploaded or linked).
 - **Showreel:** upload a video or photo (or paste a link) for the left or right hero phone, or for the "On the reel" strip. The strip stays hidden until it has at least one clip.
 - **Settings:** public email, alert email, WhatsApp number (shows a WhatsApp button on the site), Instagram, TikTok and YouTube links, and password change.
 
@@ -63,7 +66,7 @@ Smoke test (with the server running): `ADMIN_EMAIL=… ADMIN_PASSWORD=… npm ru
 
 ## Client preview (GitHub Pages)
 
-Every push to `main` publishes `public/` to <https://lucianozambuko-gif.github.io/S.I.C/> through `.github/workflows/pages.yml`. This is a front-end preview only. The site shows its built-in content, the forms can't submit, and `/admin` isn't published. The full app runs on Render.
+Every push to `main` publishes `public/` to <https://lucianozambuko-gif.github.io/S.I.C/> through `.github/workflows/pages.yml`. This is a front-end preview only. The site shows its built-in content, `/projects` shows labelled sample entries, the contact page hands the message to email (or WhatsApp) instead of saving it, the home-page forms can't submit, and `/admin` isn't published. The full app runs on Render.
 
 ## Files
 
@@ -72,6 +75,8 @@ server.js            Express app: public API, admin API, static site
 db.js                Turso/libSQL connection, schema, seed data
 lib/                 auth (JWT cookie), mail (SMTP + email template), media (Cloudinary), validate
 public/index.html    The website
+public/projects.html Projects page (public/js/projects.js)
+public/contact.html  Contact page
 public/css/site.css  Site styles (luxury layer, modal, showreel)
 public/js/site.js    Animations, live content, forms
 public/admin/        S.I.C Studio dashboard

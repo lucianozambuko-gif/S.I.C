@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact | S.I.C, South Africa's Content &amp; Growth Partner</title>
+<meta name="description" content="Start a project with S.I.C or request a private consultation. We reply within one working day.">
+<meta name="theme-color" content="#0A0908">
+<link rel="canonical" href="https://sicagency.com/contact">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contact | S.I.C">
+<meta property="og:description" content="Let's scale what you've built. We reply within one working day.">
+<meta property="og:image" content="/img/sic-mark.jpg">
+<meta property="og:locale" content="en_ZA">
+<link rel="icon" href="/img/sic-mark.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400;1,6..96,500&family=Familjen+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="/css/site.css">
+<script src="/js/site.js" defer></script>
+</head>
+<body class="sub">
+<canvas id="rosettes" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="glow" id="glow" aria-hidden="true"></div>
+<div class="progress" id="progress"></div>
+<div class="cur" id="cur" aria-hidden="true"></div><div class="cur-dot" id="curDot" aria-hidden="true"></div>
+
+<header class="nav gut">
+  <div class="wrap">
+    <a class="brand" href="/"><img src="/img/sic-mark.jpg" alt=""><b>S.I.C</b></a>
+    <nav aria-label="Main">
+      <a href="/">Home</a><a href="/#work">Who we scale</a><a href="/#packages">Packages</a><a href="/#desk">Private Desk</a><a href="/projects">Projects</a><a href="/contact" aria-current="page">Contact</a>
+    </nav>
+    <div class="nav-end">
+      <a href="/projects" class="btn ghost sm magnet">See our work <span class="ar">→</span></a>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mnav"><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+<nav class="mnav" id="mnav" aria-label="Menu">
+  <a href="/" style="--i:0"><small>01</small>Home</a>
+  <a href="/#work" style="--i:1"><small>02</small>Who we scale</a>
+  <a href="/#packages" style="--i:2"><small>03</small>Packages</a>
+  <a href="/#desk" style="--i:3"><small>04</small>Private Desk</a>
+  <a href="/projects" style="--i:4"><small>05</small>Projects</a>
+  <a href="/contact" style="--i:5" aria-current="page"><small>06</small>Contact</a>
+</nav>
+
+<main id="top">
+
+<section class="phero gut">
+  <div class="wrap">
+    <span class="eyebrow">Contact</span>
+    <h1>
+      <span class="ln"><span>Let's scale</span></span>
+      <span class="ln"><span class="hot">what you've built.</span></span>
+    </h1>
+    <p class="lede">Tell us where you are now and where you want to be in six months. We reply within one working day.</p>
+  </div>
+</section>
+
+<section class="gut" style="padding-top:0">
+  <div class="wrap cgrid">
+    <aside class="cinfo">
+      <div class="ccard rv">
+        <p class="k">Email</p>
+        <a class="v mail" id="mail" href="mailto:hello@sicagency.com">hello@sicagency.com</a>
+        <div class="btns"><button class="btn ghost sm" id="copy" type="button">Copy email</button></div>
+      </div>
+      <div class="ccard rv" id="waCard" hidden>
+        <p class="k">WhatsApp</p>
+        <p class="v">Message the team directly.</p>
+        <div class="btns"><a href="#" id="waLink" class="btn sm" target="_blank" rel="noopener" hidden>WhatsApp us <span class="ar">→</span></a></div>
+      </div>
+      <div class="ccard rv">
+        <p class="k">Studio</p>
+        <p class="v">Johannesburg, South Africa</p>
+        <p class="s">Working with talent and brands across the country since 2016.</p>
+      </div>
+      <div class="ccard rv" id="socialCard" hidden>
+        <p class="k">Follow</p>
+        <div class="socials big" data-socials></div>
+      </div>
+      <div class="ccard desk-card rv">
+        <p class="k">Private Desk</p>
+        <p class="v">Need discretion?</p>
+        <p class="s">Choose <b>Private Desk</b> in the form. Only our senior team sees it, and confidentiality agreements are available on request.</p>
+      </div>
+    </aside>
+
+    <div class="cpanel foil" id="cPanel">
+      <form id="contactForm" class="m-form cform" novalidate>
+        <div class="ktoggle" role="radiogroup" aria-label="Type of request">
+          <input type="radio" name="kind" id="kEnq" value="enquiry" checked><label for="kEnq">Project enquiry</label>
+          <input type="radio" name="kind" id="kPriv" value="private"><label for="kPriv">Private Desk</label>
+        </div>
+        <div class="hp" aria-hidden="true"><label for="cWeb">Leave empty</label><input id="cWeb" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="grid2">
+          <label class="f" for="cName"><span>Full name *</span><input id="cName" name="name" required maxlength="120" autocomplete="name"><em data-err="name"></em></label>
+          <label class="f" for="cEmail"><span>Email *</span><input id="cEmail" name="email" type="email" required maxlength="160" autocomplete="email"><em data-err="email"></em></label>
+          <label class="f" for="cPhone"><span>Phone or WhatsApp</span><input id="cPhone" name="phone" type="tel" maxlength="40" autocomplete="tel" placeholder="e.g. 082 123 4567"><em data-err="phone"></em></label>
+          <label class="f" for="cType"><span>What you do *</span><select id="cType" name="client_type" required data-options="clientTypes" data-placeholder="Choose one"></select><em data-err="client_type"></em></label>
+          <label class="f" for="cHandle"><span>Main social link or handle</span><input id="cHandle" name="handle" maxlength="200" placeholder="@yourhandle or a link"><em data-err="handle"></em></label>
+          <label class="f" for="cAud"><span>Audience size</span><select id="cAud" name="audience" data-options="audience" data-placeholder="Across all platforms"></select><em data-err="audience"></em></label>
+          <label class="f" for="cPkg"><span>Package</span><select id="cPkg" name="package" data-packages></select><em data-err="package"></em></label>
+          <label class="f" for="cBudget"><span>Monthly budget</span><select id="cBudget" name="budget" data-options="budget" data-placeholder="Choose a range"></select><em data-err="budget"></em></label>
+          <label class="f private-only" for="cPref"><span>Best way to reach you</span><select id="cPref" name="contact_pref" data-options="contactPref" data-placeholder="Choose one"></select><em data-err="contact_pref"></em></label>
+        </div>
+        <label class="f" for="cMsg"><span>What do you want to grow? *</span><textarea id="cMsg" name="message" rows="5" required maxlength="3000" placeholder="Where you are now, and where you want to be in six months."></textarea><em data-err="message"></em></label>
+        <p class="m-note private-only">Private Desk requests are seen only by our senior team.</p>
+        <p class="popia">We use your details only to reply to this enquiry, and we never share them. (POPIA)</p>
+        <div class="m-actions"><button class="btn magnet" type="submit">Send enquiry <span class="ar">→</span></button><p class="m-status" role="status"></p></div>
+      </form>
+
+      <div class="m-done" id="cDone" hidden>
+        <div class="tick" aria-hidden="true"></div>
+        <h3 id="cDoneTitle">Received.</h3>
+        <p id="cDoneText"></p>
+        <button class="btn ghost" type="button" data-again>Send another message</button>
+      </div>
+
+      <div class="m-done" id="cOffline" hidden>
+        <h3>Almost there.</h3>
+        <p>Our online form isn't available right now, so your message hasn't been sent yet. Send it in one tap; everything you typed is already filled in.</p>
+        <div class="m-actions" style="justify-content:center">
+          <a class="btn" id="offMail" href="#">Send by email <span class="ar">→</span></a>
+          <a class="btn ghost" id="offWa" href="#" target="_blank" rel="noopener" hidden>Send on WhatsApp</a>
+        </div>
+        <button class="link-btn" type="button" data-again>Back to the form</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="gut"><div class="wrap">
+  <span>S.I.C, Service Investment Connections · Johannesburg, South Africa · Est. 2016</span>
+  <span class="socials foot-links"><a href="/">Home</a><a href="/projects">Projects</a></span>
+  <span class="socials" id="socials" data-socials></span>
+  <span>&copy; <span id="yr">2026</span> S.I.C</span>
+</div></footer>
+</body>
+</html>

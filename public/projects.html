@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Projects | S.I.C, South Africa's Content &amp; Growth Partner</title>
+<meta name="description" content="Selected work by S.I.C: campaigns, clips and shoots for South African artists, actors, athletes, influencers, media personalities and brands.">
+<meta name="theme-color" content="#0A0908">
+<link rel="canonical" href="https://sicagency.com/projects">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Projects | S.I.C">
+<meta property="og:description" content="Selected work for South African talent and brands.">
+<meta property="og:image" content="/img/sic-mark.jpg">
+<meta property="og:locale" content="en_ZA">
+<link rel="icon" href="/img/sic-mark.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400;1,6..96,500&family=Familjen+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="/css/site.css">
+<script src="/js/site.js" defer></script>
+<script src="/js/projects.js" defer></script>
+</head>
+<body class="sub">
+<canvas id="rosettes" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="glow" id="glow" aria-hidden="true"></div>
+<div class="progress" id="progress"></div>
+<div class="cur" id="cur" aria-hidden="true"></div><div class="cur-dot" id="curDot" aria-hidden="true"></div>
+
+<header class="nav gut">
+  <div class="wrap">
+    <a class="brand" href="/"><img src="/img/sic-mark.jpg" alt=""><b>S.I.C</b></a>
+    <nav aria-label="Main">
+      <a href="/">Home</a><a href="/#work">Who we scale</a><a href="/#packages">Packages</a><a href="/#desk">Private Desk</a><a href="/projects" aria-current="page">Projects</a><a href="/contact">Contact</a>
+    </nav>
+    <div class="nav-end">
+      <a href="/contact" class="btn sm magnet">Book a project <span class="ar">→</span></a>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mnav"><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+<nav class="mnav" id="mnav" aria-label="Menu">
+  <a href="/" style="--i:0"><small>01</small>Home</a>
+  <a href="/#work" style="--i:1"><small>02</small>Who we scale</a>
+  <a href="/#packages" style="--i:2"><small>03</small>Packages</a>
+  <a href="/#desk" style="--i:3"><small>04</small>Private Desk</a>
+  <a href="/projects" style="--i:4" aria-current="page"><small>05</small>Projects</a>
+  <a href="/contact" style="--i:5"><small>06</small>Contact</a>
+</nav>
+
+<main id="top">
+
+<section class="phero gut">
+  <div class="wrap">
+    <span class="eyebrow">Selected work<span id="pCount"></span></span>
+    <h1>
+      <span class="ln"><span>Projects that</span></span>
+      <span class="ln"><span class="hot">moved the needle.</span></span>
+    </h1>
+    <p class="lede">Campaigns, clips and shoots for South African artists, athletes, personalities and brands. Open any project to see the work.</p>
+  </div>
+</section>
+
+<section class="gut work" style="padding-top:0">
+  <div class="wrap">
+    <div class="chips" id="chips" aria-label="Filter projects"></div>
+    <p class="sample-note" id="sampleNote" hidden>Preview: these are sample entries. Real projects appear here once they're added in S.I.C Studio.</p>
+    <ol class="plist" id="plist"></ol>
+    <div class="pempty" id="pEmpty" hidden>
+      <h2>New work is <em class="serif-em">on its way.</em></h2>
+      <p>We're adding recent campaigns now. In the meantime, tell us what you want to grow.</p>
+    </div>
+  </div>
+</section>
+
+<section class="final gut">
+  <div class="wrap">
+    <h2>Your project,<span>next.</span></h2>
+    <p>Since 2016, we've scaled what's already working. Let's do the same for you.</p>
+    <div class="contact"><a href="/contact" class="btn magnet">Start a project <span class="ar">→</span></a></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="gut"><div class="wrap">
+  <span>S.I.C, Service Investment Connections · Johannesburg, South Africa · Est. 2016</span>
+  <span class="socials foot-links"><a href="/">Home</a><a href="/contact">Contact</a></span>
+  <span class="socials" id="socials" data-socials></span>
+  <span>&copy; <span id="yr">2026</span> S.I.C</span>
+</div></footer>
+
+<!-- Floating preview that follows the pointer over the list (desktop) -->
+<div class="pcard" id="pcard" aria-hidden="true"><div class="pcard-in" id="pcardIn"></div></div>
+
+<!-- Project viewer -->
+<dialog class="pview" id="pview" aria-labelledby="pvTitle">
+  <button class="m-close" type="button" data-close aria-label="Close">&times;</button>
+  <div class="pv-media" id="pvMedia"></div>
+  <div class="pv-body">
+    <p class="crest" id="pvMeta"></p>
+    <h2 id="pvTitle"></h2>
+    <p class="pv-client" id="pvClient"></p>
+    <p class="pv-text" id="pvText"></p>
+    <div class="m-actions">
+      <a class="btn" id="pvCta" href="/contact">Start a project like this <span class="ar">→</span></a>
+      <a class="btn ghost" id="pvLink" href="#" target="_blank" rel="noopener" hidden>See the work ↗</a>
+    </div>
+  </div>
+</dialog>
+</body>
+</html>

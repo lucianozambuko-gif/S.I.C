@@ -38,6 +38,7 @@
       <a href="#referrals" data-view="referrals">Referrals <b class="pill" id="navRef" hidden></b></a>
       <a href="#subscribers" data-view="subscribers">Mailing list</a>
       <a href="#packages" data-view="packages">Packages</a>
+      <a href="#projects" data-view="projects">Projects</a>
       <a href="#media" data-view="media">Showreel</a>
       <a href="#settings" data-view="settings">Settings</a>
     </nav>
@@ -92,6 +93,13 @@
       <header class="vh"><div><p class="mono gold">Shown in "Growth, packaged"</p><h1>Packages</h1></div>
         <button class="btn sm" id="addPkg" type="button">Add package</button></header>
       <div class="pkgs" id="pkgList"></div>
+    </section>
+
+    <!-- Projects -->
+    <section class="view" data-view="projects" hidden>
+      <header class="vh"><div><p class="mono gold">Shown on the Projects page</p><h1>Projects</h1></div>
+        <div class="row-end" style="margin:0"><a class="btn ghost sm" href="/projects" target="_blank" rel="noopener">View page ↗</a><button class="btn sm" id="addProj" type="button">Add project</button></div></header>
+      <div class="projs" id="projList"></div>
     </section>
 
     <!-- Media -->
@@ -166,6 +174,33 @@
     </div>
     <p class="err" id="pkgErr" role="alert"></p>
     <div class="row-end"><button class="btn ghost sm" type="button" id="pkgCancel">Cancel</button><button class="btn sm" type="submit" value="save">Save package</button></div>
+  </form>
+</dialog>
+
+<!-- Project editor -->
+<dialog class="dlg" id="projDlg" aria-labelledby="projDlgTitle">
+  <form method="dialog" id="projForm" novalidate>
+    <h2 id="projDlgTitle">Project</h2>
+    <input type="hidden" name="id">
+    <div class="grid2">
+      <label class="f" for="prTitle"><span>Project name</span><input id="prTitle" name="title" maxlength="80" required placeholder="e.g. Album launch campaign"></label>
+      <label class="f" for="prClient"><span>Client</span><input id="prClient" name="client" maxlength="80" placeholder="Name, or leave empty to keep it private"></label>
+      <label class="f" for="prCat"><span>Category</span><select id="prCat" name="category"></select></label>
+      <label class="f" for="prYear"><span>Year</span><input id="prYear" name="year" inputmode="numeric" maxlength="4" placeholder="e.g. 2025"></label>
+    </div>
+    <label class="f" for="prSummary"><span>Write-up (shown when someone opens the project)</span><textarea id="prSummary" name="summary" rows="4" maxlength="800" placeholder="What we did and what it achieved."></textarea></label>
+    <label class="f" for="prLink"><span>Link to the work (optional, https)</span><input id="prLink" name="link" type="url" maxlength="300" placeholder="https://youtube.com/…"></label>
+    <div class="proj-media" id="prMedia"></div>
+    <div class="grid2">
+      <label class="f" for="prFile"><span>Preview clip or photo <i id="prUpNote"></i></span><input id="prFile" name="file" type="file" accept="video/*,image/*"></label>
+      <label class="f" for="prUrl"><span>Or paste a link (https)</span><input id="prUrl" name="url" type="url" placeholder="https://…/clip.mp4"></label>
+    </div>
+    <div class="grid3">
+      <label class="f" for="prSort"><span>Order</span><input id="prSort" name="sort" type="number" value="0"></label>
+      <label class="check" for="prActive"><input id="prActive" name="active" type="checkbox" checked> Show on the site</label>
+    </div>
+    <p class="err" id="projErr" role="alert"></p>
+    <div class="row-end"><button class="btn ghost sm" type="button" id="projCancel">Cancel</button><button class="btn sm" type="submit" value="save">Save project</button></div>
   </form>
 </dialog>
 

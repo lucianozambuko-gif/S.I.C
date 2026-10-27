@@ -29,6 +29,7 @@ export const OPTIONS = {
 const LEAD_STATUS = ['new', 'contacted', 'proposal', 'won', 'lost'];
 const REFERRAL_STATUS = ['new', 'contacted', 'converted', 'rewarded'];
 const PLACEMENTS = ['hero-1', 'hero-2', 'showcase'];
+const PROJECT_CATEGORIES = OPTIONS.clientTypes.filter((c) => c !== 'Other');
 const PUBLIC_SETTING_KEYS = ['contact_email', 'whatsapp', 'instagram', 'tiktok', 'youtube'];
 
 const now = () => new Date().toISOString();
@@ -101,6 +102,15 @@ app.get(
       media,
       options: OPTIONS,
     });
+  })
+);
+
+app.get(
+  '/api/projects',
+  wrap(async (_req, res) => {
+    const rows = await all('SELECT id,title,client,category,year,summary,link,url,resource_type FROM projects WHERE active=1 ORDER BY sort, id DESC');
+    res.set('Cache-Control', 'public, max-age=60');
+    res.json(rows);
   })
 );
 
@@ -423,16 +433,8 @@ admin.post(
     const placement = oneOf(b.placement || 'showcase', 'placement', 'Placement', PLACEMENTS, true);
     const title = text(b.title, 'title', 'Title', { max: 80 });
     const caption = text(b.caption, 'caption', 'Caption', { max: 140 });
-    let item;
-    if (req.file) {
-      if (!/^(video|image)\//.test(req.file.mimetype)) throw new ValidationError('file', 'Upload a video or an image file.');
-      if (!mediaEnabled()) throw new ValidationError('file', 'File uploads need Cloudinary. Add CLOUDINARY_URL to your environment, or paste a video link instead.');
-      item = await uploadBuffer(req.file.buffer, req.file.mimetype);
-    } else {
-      const url = text(b.url, 'url', 'Media link', { required: true, max: 500 });
-      if (!/^https:\/\//i.test(url)) throw new ValidationError('url', 'Use a link that starts with https://');
-      item = { url, public_id: null, resource_type: /\.(jpe?g|png|webp|gif|avif)(\?|$)/i.test(url) ? 'image' : 'video' };
-    }
+    const item = await mediaFrom(req, b);
+    if (!item) throw new ValidationError('url', 'Media link is required.');
     if (placement !== 'showcase') {
       // Each hero phone holds one clip; replace what was there.
       const old = await all('SELECT * FROM media WHERE placement=?', [placement]);
@@ -466,6 +468,68 @@ admin.delete(
     if (m) {
       await destroy(m.public_id, m.resource_type);
       await run('DELETE FROM media WHERE id=?', [m.id]);
+    }
+    res.json({ ok: true });
+  })
+);
+
+/* Projects */
+function projectBody(b) {
+  const year = text(b.year, 'year', 'Year', { max: 4 });
+  if (year && !/^(19|20)\d{2}$/.test(year)) throw new ValidationError('year', 'Use a four-digit year, like 2025.');
+  const link = text(b.link, 'link', 'Project link', { max: 300 });
+  if (link && !/^https:\/\//i.test(link)) throw new ValidationError('link', 'Project link must start with https://');
+  return {
+    title: text(b.title, 'title', 'Project name', { required: true, max: 80 }),
+    client: text(b.client, 'client', 'Client', { max: 80 }),
+    category: oneOf(b.category, 'category', 'Category', PROJECT_CATEGORIES),
+    year,
+    summary: text(b.summary, 'summary', 'Write-up', { max: 800 }),
+    link,
+    sort: Number.isFinite(Number(b.sort)) ? Number(b.sort) : 0,
+    active: String(b.active ?? '1') === '0' || b.active === false ? 0 : 1,
+  };
+}
+admin.get('/projects', wrap(async (_req, res) => res.json({ categories: PROJECT_CATEGORIES, projects: await all('SELECT * FROM projects ORDER BY sort, id DESC') })));
+admin.post(
+  '/projects',
+  upload.single('file'),
+  wrap(async (req, res) => {
+    const p = projectBody(req.body || {});
+    const m = (await mediaFrom(req, req.body || {})) || { url: null, public_id: null, resource_type: 'video' };
+    const { id } = await run(
+      'INSERT INTO projects(title,client,category,year,summary,link,url,public_id,resource_type,sort,active,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',
+      [p.title, p.client, p.category, p.year, p.summary, p.link, m.url, m.public_id, m.resource_type, p.sort, p.active, now()]
+    );
+    res.status(201).json(await one('SELECT * FROM projects WHERE id=?', [id]));
+  })
+);
+admin.put(
+  '/projects/:id',
+  upload.single('file'),
+  wrap(async (req, res) => {
+    const b = req.body || {};
+    const old = await one('SELECT * FROM projects WHERE id=?', [req.params.id]);
+    if (!old) return res.status(404).json({ error: 'That project no longer exists. Refresh the page.' });
+    const p = projectBody(b);
+    let m = await mediaFrom(req, b);
+    if (!m && b.remove_media === '1') m = { url: null, public_id: null, resource_type: 'video' };
+    if (m) await destroy(old.public_id, old.resource_type); // replaced or removed
+    else m = old;
+    await run(
+      'UPDATE projects SET title=?,client=?,category=?,year=?,summary=?,link=?,url=?,public_id=?,resource_type=?,sort=?,active=? WHERE id=?',
+      [p.title, p.client, p.category, p.year, p.summary, p.link, m.url, m.public_id, m.resource_type, p.sort, p.active, old.id]
+    );
+    res.json(await one('SELECT * FROM projects WHERE id=?', [old.id]));
+  })
+);
+admin.delete(
+  '/projects/:id',
+  wrap(async (req, res) => {
+    const p = await one('SELECT * FROM projects WHERE id=?', [req.params.id]);
+    if (p) {
+      await destroy(p.public_id, p.resource_type);
+      await run('DELETE FROM projects WHERE id=?', [p.id]);
     }
     res.json({ ok: true });
   })
@@ -512,6 +576,18 @@ app.use((err, _req, res, _next) => {
 });
 
 /* ---------- Helpers ---------- */
+/** A media item from an upload or a pasted https link; null when neither was given. */
+async function mediaFrom(req, b) {
+  if (req.file) {
+    if (!/^(video|image)\//.test(req.file.mimetype)) throw new ValidationError('file', 'Upload a video or an image file.');
+    if (!mediaEnabled()) throw new ValidationError('file', 'File uploads need Cloudinary. Add CLOUDINARY_URL to your environment, or paste a video link instead.');
+    return uploadBuffer(req.file.buffer, req.file.mimetype);
+  }
+  const url = text(b.url, 'url', 'Media link', { max: 500 });
+  if (!url) return null;
+  if (!/^https:\/\//i.test(url)) throw new ValidationError('url', 'Use a link that starts with https://');
+  return { url, public_id: null, resource_type: /\.(jpe?g|png|webp|gif|avif)(\?|$)/i.test(url) ? 'image' : 'video' };
+}
 function safeJson(s) {
   try { return JSON.parse(s); } catch { return []; }
 }

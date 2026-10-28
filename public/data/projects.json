@@ -14,6 +14,13 @@
     "url": "img/projects/erp.png"
   },
   {
+    "title": "TravelogueX",
+    "category": "Live system",
+    "summary": "A travel directory where bloggers, agents and travellers document their trips, search authentic itineraries, propose organised trips and design custom itineraries with AI.\n\nAI trip builder · Searchable trip records · Member profiles & messaging · Paid memberships & priority listings",
+    "link": "https://www.traveloguex.com/",
+    "url": "img/projects/traveloguex.png"
+  },
+  {
     "title": "Muller's Delights Catering",
     "category": "Client site",
     "summary": "A catering business site for Chef Muller: weddings, marooro, graduations, parties and business events.\n\nCatering packages & events · Online event booking · WhatsApp enquiries",
@@ -33,13 +40,6 @@
     "summary": "An online storefront for a small-batch bakery: celebration cakes, giant muffins, scones and donuts.\n\nMenu with category filters · Cart & online ordering · Customer accounts",
     "link": "https://teacakes.vercel.app/",
     "url": "img/projects/tea-cakes.jpg"
-  },
-  {
-    "title": "Lavish Bites",
-    "category": "Client site",
-    "summary": "A food-ordering site for a fire-cooked braai brand, family-focused and flavour-filled.\n\nMenu & online ordering · Cart & customer sign-up · Hire-a-chef bookings",
-    "link": "https://lucianozambuko-gif.github.io/lavish-life/",
-    "url": "img/projects/lavish-bites.jpg"
   },
   {
     "title": "S.I.C Growth",

@@ -108,7 +108,7 @@ app.get(
 app.get(
   '/api/projects',
   wrap(async (_req, res) => {
-    const rows = await all('SELECT id,title,client,category,year,summary,link,url,resource_type FROM projects WHERE active=1 ORDER BY sort, id DESC');
+    const rows = await all('SELECT id,title,client,category,year,summary,link,url,resource_type,demo FROM projects WHERE active=1 ORDER BY sort, id DESC');
     res.set('Cache-Control', 'public, max-age=60');
     res.json(rows);
   })
@@ -488,6 +488,7 @@ function projectBody(b) {
     link,
     sort: Number.isFinite(Number(b.sort)) ? Number(b.sort) : 0,
     active: String(b.active ?? '1') === '0' || b.active === false ? 0 : 1,
+    demo: String(b.demo ?? '0') === '1' || b.demo === true ? 1 : 0,
   };
 }
 admin.get('/projects', wrap(async (_req, res) => res.json({ categories: PROJECT_CATEGORIES, projects: await all('SELECT * FROM projects ORDER BY sort, id DESC') })));
@@ -498,8 +499,8 @@ admin.post(
     const p = projectBody(req.body || {});
     const m = (await mediaFrom(req, req.body || {})) || { url: null, public_id: null, resource_type: 'video' };
     const { id } = await run(
-      'INSERT INTO projects(title,client,category,year,summary,link,url,public_id,resource_type,sort,active,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',
-      [p.title, p.client, p.category, p.year, p.summary, p.link, m.url, m.public_id, m.resource_type, p.sort, p.active, now()]
+      'INSERT INTO projects(title,client,category,year,summary,link,url,public_id,resource_type,sort,active,demo,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',
+      [p.title, p.client, p.category, p.year, p.summary, p.link, m.url, m.public_id, m.resource_type, p.sort, p.active, p.demo, now()]
     );
     res.status(201).json(await one('SELECT * FROM projects WHERE id=?', [id]));
   })
@@ -517,8 +518,8 @@ admin.put(
     if (m) await destroy(old.public_id, old.resource_type); // replaced or removed
     else m = old;
     await run(
-      'UPDATE projects SET title=?,client=?,category=?,year=?,summary=?,link=?,url=?,public_id=?,resource_type=?,sort=?,active=? WHERE id=?',
-      [p.title, p.client, p.category, p.year, p.summary, p.link, m.url, m.public_id, m.resource_type, p.sort, p.active, old.id]
+      'UPDATE projects SET title=?,client=?,category=?,year=?,summary=?,link=?,url=?,public_id=?,resource_type=?,sort=?,active=?,demo=? WHERE id=?',
+      [p.title, p.client, p.category, p.year, p.summary, p.link, m.url, m.public_id, m.resource_type, p.sort, p.active, p.demo, old.id]
     );
     res.json(await one('SELECT * FROM projects WHERE id=?', [old.id]));
   })

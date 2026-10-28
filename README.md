@@ -14,7 +14,7 @@ The S.I.C (Service Investment Connections) website with a working back end: enqu
 | **Join the list** | The visitor is added to the mailing list and sent a welcome email with a one-click unsubscribe link. |
 | Opens `/#enquire`, `/#private` or `/#refer` | The matching form opens automatically. Useful for Instagram bios and WhatsApp messages. |
 | Browses **/projects** | A fighter-select roster of the projects from the dashboard. Each starts locked (a dark silhouette); hovering (or tapping on a phone) unlocks it with an arcade flash. Unlock them all and the roster completes. A scoreboard shows how many projects there are per topic. Opening one shows the clip, write-up and a "Start a project like this" link. A project without a photo or clip shows the S.I.C mark. |
-| Uses **/contact** | The full enquiry form on its own page, with a Project / Private Desk switch. It saves to the dashboard like the pop-up form. Links: `/contact?package=Scale`, `/contact?private`, `/contact?project=Name`. |
+| Uses **/contact** | The full enquiry form on its own page, with a Project / Private Desk switch. It saves to the dashboard like the pop-up form. Links: `/contact?package=Scale`, `/contact?private`, `/contact?project=Name`, `/contact?demo=Name` (writes the demo request into the message). |
 
 **Dashboard (`/admin`)**
 
@@ -22,7 +22,7 @@ The S.I.C (Service Investment Connections) website with a working back end: enqu
 - **Enquiries:** a pipeline board (New, Contacted, Proposal sent, Won, Lost). Drag cards between columns, or open one to see the details, reply by email, WhatsApp or call, add team notes, or delete. You can search, filter and export to CSV.
 - **Referrals, Mailing list:** track statuses, remove entries and export subscribers to CSV.
 - **Packages:** add, edit, reorder, hide or highlight the "Growth, packaged" tiers. Changes go live on the site immediately.
-- **Projects:** add, edit, reorder or hide the work shown on `/projects`: name, client, category, year, write-up, an optional link, and a preview clip or photo (uploaded or linked). On first start the dashboard is filled with 8 starter projects (live systems and client sites) from `public/data/projects.json`. This happens once only, so anything you edit or delete stays that way.
+- **Projects:** add, edit, reorder or hide the work shown on `/projects`: name, client, category, year, write-up, an optional link, and a preview clip or photo (uploaded or linked). Tick **Offer a demo request** on a system you can demo: its button on `/projects` becomes "Request a demo" and opens the contact form with the request already written. On first start the dashboard is filled with 8 starter projects (live systems and client sites) from `public/data/projects.json`. This happens once only, so anything you edit or delete stays that way.
 - **Showreel:** upload a video or photo (or paste a link) for the left or right hero phone, or for the "On the reel" strip. The strip stays hidden until it has at least one clip.
 - **Settings:** public email, alert email, WhatsApp number (shows a WhatsApp button on the site), Instagram, TikTok and YouTube links, and password change.
 

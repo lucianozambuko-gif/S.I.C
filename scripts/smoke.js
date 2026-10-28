@@ -72,6 +72,9 @@ ok(r.status === 200 && !r.data.some((p) => p.id === projId), 'hidden project is 
 await call(`/api/admin/projects/${projId}`, { method: 'PUT', body: { title: 'Smoke project', category: 'Brand', remove_media: '1' } });
 r = await call('/api/projects');
 ok(r.data.some((p) => p.id === projId && p.url === null), 'visible project is public, preview removed');
+await call(`/api/admin/projects/${projId}`, { method: 'PUT', body: { title: 'Smoke project', category: 'Live system', demo: '1' } });
+r = await call('/api/projects');
+ok(r.data.some((p) => p.id === projId && p.demo === 1 && p.category === 'Live system'), 'demo setting saves and is public');
 await call(`/api/admin/projects/${projId}`, { method: 'DELETE' });
 
 r = await call('/api/admin/settings', { method: 'PUT', body: { contact_email: 'hello@sicagency.com', whatsapp: '082 123 4567', instagram: 'https://instagram.com/sic' } });

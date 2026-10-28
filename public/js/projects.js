@@ -199,7 +199,10 @@
     $('#pvClient').hidden = !p.client;
     $('#pvText').textContent = p.summary;
     $('#pvText').hidden = !p.summary;
-    $('#pvCta').href = `contact?project=${encodeURIComponent(p.title)}`;
+    // Systems we can demo get a demo request; the contact form arrives with it already written.
+    const cta = $('#pvCta');
+    cta.href = `contact?${p.demo ? 'demo' : 'project'}=${encodeURIComponent(p.title)}`;
+    cta.firstChild.textContent = p.demo ? 'Request a demo ' : 'Start a project like this ';
     $('#pvLink').hidden = !p.link;
     if (p.link) $('#pvLink').href = p.link;
     view.showModal();

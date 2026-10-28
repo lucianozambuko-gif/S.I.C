@@ -395,7 +395,7 @@
     $('#projList').innerHTML = projs.map((p) => `<div class="proj${p.active ? '' : ' off'}">
       <div class="thumb">${mediaTag(p)}</div>
       <div class="proj-body">
-        <p class="mono gold">${esc([p.category, p.year].filter(Boolean).join(' · ') || 'Project')}${p.active ? '' : ' · HIDDEN'}</p>
+        <p class="mono gold">${esc([p.category, p.year].filter(Boolean).join(' · ') || 'Project')}${p.demo ? ' · DEMO' : ''}${p.active ? '' : ' · HIDDEN'}</p>
         <h3>${esc(p.title)}</h3>
         ${p.client ? `<small class="muted">${esc(p.client)}</small>` : ''}
         <div class="acts"><button class="btn ghost sm" data-editproj="${p.id}" type="button">Edit</button><button class="link" data-delproj="${p.id}" type="button">Delete</button></div>
@@ -414,6 +414,7 @@
     for (const k of ['title', 'client', 'category', 'year', 'summary', 'link']) f[k].value = p?.[k] || '';
     f.sort.value = p?.sort ?? 0;
     f.active.checked = p ? Boolean(p.active) : true;
+    f.demo.checked = Boolean(p?.demo);
     $('#prMedia').innerHTML = p?.url
       ? `<div class="thumb">${mediaTag(p)}</div><div><p class="muted">Current preview. Upload or paste a new one to replace it.</p><label class="check"><input type="checkbox" name="remove_media" value="1"> Remove the preview</label></div>`
       : '';
@@ -438,6 +439,7 @@
     const fd = new FormData(projForm);
     if (!f.file.files.length) fd.delete('file');
     fd.set('active', f.active.checked ? '1' : '0');
+    fd.set('demo', f.demo.checked ? '1' : '0');
     fd.delete('id');
     btn.disabled = true;
     btn.textContent = f.file.files.length ? 'Uploading…' : 'Saving…';

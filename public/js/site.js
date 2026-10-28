@@ -405,16 +405,21 @@
   const cForm = $('#contactForm');
   if (cForm) {
     const panel = $('#cPanel'), cDone = $('#cDone'), cOff = $('#cOffline');
+    const qs = new URLSearchParams(location.search);
+    let demo = (qs.get('demo') || '').slice(0, 80);
     const setKind = (k) => {
       cForm.classList.toggle('is-private', k === 'private');
-      $('button[type=submit]', cForm).firstChild.textContent = k === 'private' ? 'Request consultation ' : 'Send enquiry ';
+      $('button[type=submit]', cForm).firstChild.textContent = k === 'private' ? 'Request consultation ' : demo ? 'Request demo ' : 'Send enquiry ';
     };
     cForm.addEventListener('change', (e) => { if (e.target.name === 'kind') setKind(e.target.value); });
-    // Deep links: /contact?package=Scale, ?project=Album+launch, ?private
-    const qs = new URLSearchParams(location.search);
+    // Deep links: /contact?package=Scale, ?project=Album+launch, ?demo=Max+Meal+POS, ?private
     if (qs.has('private')) { cForm.elements.kind.value = 'private'; setKind('private'); }
     if (qs.get('package')) { const p = qs.get('package'); if (!PACKAGES.includes(p)) PACKAGES.push(p); fillAllSelects(); cForm.elements.package.value = p; }
     if (qs.get('project')) cForm.elements.message.value = `I saw "${qs.get('project').slice(0, 80)}" on your Projects page and want something like it. `;
+    if (demo) {
+      cForm.elements.message.value = `Hi, I'd like to request a demo of ${demo}. `;
+      setKind('enquiry');
+    }
 
     cForm.addEventListener('input', (e) => {
       const f = e.target.closest('.f');
@@ -441,6 +446,7 @@
           ? 'Your request has gone straight to our senior team. Expect a personal reply within one working day.'
           : "Your enquiry is with our team. We'll reply within one working day, and a confirmation is on its way to your inbox.";
         cForm.reset();
+        demo = '';
         setKind('enquiry');
         fillAllSelects();
         show(cDone);
@@ -452,7 +458,7 @@
           data.handle && `Social: ${data.handle}`, data.audience && `Audience: ${data.audience}`, data.package && `Package: ${data.package}`,
           data.budget && `Budget: ${data.budget}`, data.contact_pref && `Best way to reach me: ${data.contact_pref}`,
         ].filter(Boolean).join('\n') + `\n\n${data.message}`;
-        const subject = `${data.kind === 'private' ? 'Private Desk request' : 'Project enquiry'}: ${data.name}`;
+        const subject = `${data.kind === 'private' ? 'Private Desk request' : demo ? `Demo request (${demo})` : 'Project enquiry'}: ${data.name}`;
         $('#offMail').href = `mailto:${mail.textContent.trim()}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         const offWa = $('#offWa');
         offWa.hidden = !waNumber;

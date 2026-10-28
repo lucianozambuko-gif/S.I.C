@@ -57,7 +57,7 @@ const schema = [
     title TEXT NOT NULL, client TEXT NOT NULL DEFAULT '', category TEXT NOT NULL DEFAULT '',
     year TEXT NOT NULL DEFAULT '', summary TEXT NOT NULL DEFAULT '', link TEXT NOT NULL DEFAULT '',
     url TEXT, public_id TEXT, resource_type TEXT NOT NULL DEFAULT 'video',
-    sort INTEGER NOT NULL DEFAULT 0, active INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL)`,
+    sort INTEGER NOT NULL DEFAULT 0, active INTEGER NOT NULL DEFAULT 1, demo INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL)`,
   `CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL DEFAULT '')`,
   `CREATE TABLE IF NOT EXISTS admins (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -81,6 +81,9 @@ const SEED_PACKAGES = [
 
 export async function migrate() {
   await db.batch(schema, 'write');
+  // Columns added after launch (CREATE TABLE IF NOT EXISTS leaves existing tables as they are).
+  const projectCols = (await all('PRAGMA table_info(projects)')).map((c) => c.name);
+  if (!projectCols.includes('demo')) await run('ALTER TABLE projects ADD COLUMN demo INTEGER NOT NULL DEFAULT 0');
 
   const { n } = await one('SELECT COUNT(*) AS n FROM packages');
   if (!n) {
@@ -99,8 +102,8 @@ export async function migrate() {
       const seed = JSON.parse(fs.readFileSync(new URL('./public/data/projects.json', import.meta.url), 'utf8'));
       for (const [i, p] of seed.entries()) {
         await run(
-          "INSERT INTO projects(title,category,summary,link,url,resource_type,sort,active,created_at) VALUES(?,?,?,?,?,'image',?,1,?)",
-          [p.title, p.category, p.summary, p.link, '/' + p.url, i + 1, new Date().toISOString()]
+          "INSERT INTO projects(title,category,summary,link,url,resource_type,sort,active,demo,created_at) VALUES(?,?,?,?,?,'image',?,1,?,?)",
+          [p.title, p.category, p.summary, p.link, '/' + p.url, i + 1, p.demo ? 1 : 0, new Date().toISOString()]
         );
       }
     }

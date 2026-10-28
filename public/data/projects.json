@@ -11,7 +11,8 @@
     "category": "Live system",
     "summary": "The full system built for independent schools, running for a demo school: a public school website with online enrolment, plus staff and parent portals.\n\nSchool website & news · Online enrolment applications · Application status tracking · Staff & parent portals",
     "link": "https://clouduko-erp.onrender.com/",
-    "url": "img/projects/erp.png"
+    "url": "img/projects/erp.png",
+    "demo": true
   },
   {
     "title": "TravelogueX",
@@ -39,7 +40,8 @@
     "category": "Live system",
     "summary": "A multi-outlet point of sale for Max Meal. Staff pick their outlet and name, sign in with a PIN and sell from a fullscreen till.\n\nMulti-outlet selling · Staff PIN sign-in · Manager sign-in · Fullscreen till mode",
     "link": "https://maxmeal.online/pos/sell",
-    "url": "img/projects/maxmeal.png"
+    "url": "img/projects/maxmeal.png",
+    "demo": true
   },
   {
     "title": "Unako GBV Foundation",

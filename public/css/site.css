@@ -516,8 +516,6 @@ body.menu-open{overflow:hidden}
 .phero .lede{max-width:560px;font-size:clamp(17px,1.6vw,20px);color:var(--dust);margin-top:26px;animation:fade 1s calc(var(--intro) + .4s) both}
 
 /* ===== Projects page: fighter select ===== */
-.touch-only{display:none}
-@media(pointer:coarse){.fine-only{display:none}.touch-only{display:inline}}
 /* HUD: the game's counters, in the site's card style */
 .hud{display:grid;grid-template-columns:1.4fr auto 1fr;gap:1px;border:1px solid var(--line);border-radius:22px;background:var(--line);overflow:hidden;animation:fade .8s calc(var(--intro) + .4s) both}
 .hud-cell{display:grid;gap:10px;align-content:end;min-width:0;padding:20px 24px;background:var(--hide)}

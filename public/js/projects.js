@@ -42,7 +42,7 @@
     items = rows;
     $('#sampleNote').hidden = !sample;
     $('#pEmpty').hidden = rows.length > 0;
-    $('.arcade .hud').hidden = $('.select-title').hidden = !rows.length;
+    $('.arcade .hud').hidden = $('.select-head').hidden = !rows.length;
     $('#pCount').textContent = rows.length ? ` · ${String(rows.length).padStart(2, '0')}` : '';
     grid.style.setProperty('--per', Math.min(rows.length, 8) || 1);
     grid.innerHTML = rows.map((p, i) => {
@@ -53,12 +53,12 @@
         <span class="f-clip"><span class="f-in">
           <span class="f-bg"></span>
           <span class="f-art">${art(p, i)}</span>
-          <span class="f-lock" aria-hidden="true"><b class="px">?</b>
+          <span class="f-lock" aria-hidden="true"><b>?</b>
             <svg viewBox="0 0 24 24"><path class="shackle" d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="5" y="11" width="14" height="10" rx="2"/></svg></span>
           <span class="f-flash"></span>
-          <span class="f-stamp px" aria-hidden="true">UNLOCKED!</span>
-        </span><span class="f-name">${esc(p.title)}</span></span>
-        <span class="f-p1 px" aria-hidden="true">P1</span>
+          <span class="f-stamp" aria-hidden="true">Unlocked</span>
+        </span><span class="f-name">${p.category ? `<small>${esc(p.category)}</small>` : ''}${esc(p.title)}</span></span>
+        <span class="f-p1" aria-hidden="true">P1</span>
       </button>`;
     }).join('');
     renderTeams();
@@ -71,7 +71,7 @@
   /* ============ HUD: unlocked counter, topic scoreboard, timer ============ */
   function progress(celebrate) {
     const n = items.filter((p) => unlocked.has(keyOf(p))).length, total = items.length;
-    $('#hudCount').textContent = `UNLOCKED ${n}/${total}`;
+    $('#hudCount').textContent = `${n}/${total}`;
     $('#hudBar').style.width = total ? `${(n / total) * 100}%` : '0';
     $('#replay').hidden = n === 0;
     $$('.team', teams).forEach((t) => {
@@ -85,10 +85,10 @@
   function renderTeams() {
     const cats = [...new Set(items.map((p) => p.category).filter(Boolean))];
     teams.hidden = !items.length;
-    teams.innerHTML = [['ALL', ''], ...cats.map((c) => [c, c])].map(([label, val], k) => {
+    teams.innerHTML = [['All', ''], ...cats.map((c) => [c, c])].map(([label, val], k) => {
       const total = items.filter((p) => !val || p.category === val).length;
       return `<button type="button" class="team${k ? '' : ' on'}" data-cat="${esc(val)}" aria-pressed="${!k}">
-        <span class="t-name">${esc(label)}</span><span class="px t-score"><span class="t-got">0</span>/${total}</span><span class="px t-x">×${total}</span></button>`;
+        <span class="t-name">${esc(label)}</span><span class="t-score"><span class="t-got">0</span>/${total} unlocked</span><span class="t-x">${total}</span></button>`;
     }).join('');
   }
   teams.addEventListener('click', (e) => {

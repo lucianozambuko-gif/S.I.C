@@ -412,6 +412,12 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:1
 /* private desk */
 .desk{background:radial-gradient(120% 80% at 50% 0%,#1d160e,var(--night) 70%);border-block:1px solid rgba(217,183,126,.18)}
 .desk .wrap{text-align:center}
+/* background video behind a section; the overlay keeps text readable and melts the edges into the page */
+.has-vid{position:relative;isolation:isolate;overflow:hidden}
+.bgv{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.bgv video{width:100%;height:100%;object-fit:cover;display:block}
+.bgv::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--night) 0%,rgba(10,9,8,.74) 24%,rgba(10,9,8,.74) 76%,var(--night) 100%)}
+.desk .bgv::after{background:linear-gradient(180deg,var(--night) 0%,rgba(16,11,6,.7) 22%,rgba(16,11,6,.78) 80%,var(--night) 100%)}
 .crest{display:inline-flex;align-items:center;gap:14px;font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--gold)}
 .crest::before,.crest::after{content:"";width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
 .crest::after{transform:scaleX(-1)}

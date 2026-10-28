@@ -253,6 +253,20 @@
     $$('.statement h2 .w').forEach((w, i) => w.style.setProperty('--d', i * 0.07 + 's'));
   }
 
+  /* Section background videos: loaded on first approach, playing only while on screen.
+     Reduced motion or data saver keeps the still poster. */
+  const bgVids = $$('.bgv video');
+  if (bgVids.length && !reduce && !navigator.connection?.saveData) {
+    const vio = new IntersectionObserver((es) => es.forEach((e) => {
+      const v = e.target;
+      if (e.isIntersecting) {
+        if (!v.src) v.src = v.dataset.src;
+        v.play().catch(() => {}); // autoplay refused: the poster stays
+      } else v.pause();
+    }), { rootMargin: '200px 0px' });
+    bgVids.forEach((v) => vio.observe(v));
+  }
+
   /* Services jigsaw: pieces assemble as they scroll in; the seams flash when the last one locks. */
   const board = $('#svcGrid');
   if (board && !reduce) {

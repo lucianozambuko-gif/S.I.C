@@ -491,6 +491,18 @@ body.menu-open{overflow:hidden}
 @media(max-width:900px){.menu-btn{display:block}}
 @media(max-width:400px){.nav-end .btn{padding:9px 14px;font-size:13px}.nav-end .btn .ar{display:none}}
 
+/* back to top (under the mobile menu, z 45) */
+.to-top{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));z-index:40;width:54px;height:54px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:rgba(21,18,15,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--bone);cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.45);opacity:0;transform:translateY(24px) scale(.7);pointer-events:none;transition:opacity .35s,transform .5s cubic-bezier(.2,.9,.3,1.4),background .3s,color .3s}
+.to-top.show{opacity:1;transform:none;pointer-events:auto}
+.tt-ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.tt-ring circle{fill:none;stroke:rgba(245,238,228,.14);stroke-width:2}
+.tt-ring .tt-fill{stroke:var(--amber);stroke-linecap:round;transition:stroke-dashoffset .15s linear}
+.tt-arrow{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s cubic-bezier(.2,.9,.3,1.4)}
+.to-top:hover{background:var(--foil);color:#1a0f06}
+.to-top:hover .tt-arrow{transform:translateY(-3px)}
+.to-top:active{transform:scale(.92)}
+.menu-open .to-top{opacity:0;pointer-events:none}
+
 /* page hero (projects, contact) */
 .phero{padding-block:clamp(56px,9vw,120px) clamp(40px,6vw,70px)}
 .phero .eyebrow{animation:fade .8s var(--intro) both}

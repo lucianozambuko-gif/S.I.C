@@ -85,6 +85,25 @@
     pr.style.transform = `scaleX(${h.scrollTop / (h.scrollHeight - h.clientHeight || 1)})`;
   }, { passive: true });
 
+  /* Back to top: appears after the first screen; its ring fills with scroll progress. */
+  const toTop = $('#toTop');
+  if (toTop) {
+    const ring = $('.tt-fill', toTop), C = 2 * Math.PI * 25;
+    ring.style.strokeDasharray = C;
+    const update = () => {
+      const h = document.documentElement, show = h.scrollTop > innerHeight * 0.8;
+      toTop.classList.toggle('show', show);
+      toTop.tabIndex = show ? 0 : -1;
+      ring.style.strokeDashoffset = C * (1 - h.scrollTop / (h.scrollHeight - h.clientHeight || 1));
+    };
+    addEventListener('scroll', update, { passive: true });
+    update();
+    toTop.addEventListener('click', () => {
+      scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+      $('.nav .brand')?.focus({ preventScroll: true }); // keyboard users land at the top too
+    });
+  }
+
   if (fine && !reduce) {
     const cur = $('#cur'), dot = $('#curDot');
     let px = -100, py = -100, tx = -100, ty = -100;

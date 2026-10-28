@@ -1,0 +1,58 @@
+[
+  {
+    "title": "Booking & Marketplace Platform",
+    "category": "Live system",
+    "summary": "A two-sided booking marketplace: browse verified providers, book and pay securely, and message safely, all in one place.\n\nProvider search & matching · Secure booking & online payments · In-app messaging per booking · Verification & ratings",
+    "link": "https://online-tutor-web.vercel.app/",
+    "url": "img/projects/booking.png"
+  },
+  {
+    "title": "School ERP",
+    "category": "Live system",
+    "summary": "The full system built for independent schools, running for a demo school: a public school website with online enrolment, plus staff and parent portals.\n\nSchool website & news · Online enrolment applications · Application status tracking · Staff & parent portals",
+    "link": "https://clouduko-erp.onrender.com/",
+    "url": "img/projects/erp.png"
+  },
+  {
+    "title": "Muller's Delights Catering",
+    "category": "Client site",
+    "summary": "A catering business site for Chef Muller: weddings, marooro, graduations, parties and business events.\n\nCatering packages & events · Online event booking · WhatsApp enquiries",
+    "link": "https://mullers-delights.onrender.com/",
+    "url": "img/projects/mullers-delights.jpg"
+  },
+  {
+    "title": "Vee's Sparkles Cleaning",
+    "category": "Client site",
+    "summary": "A multi-page site for a South African cleaning company serving homes and businesses.\n\nServices & gallery · Online booking & free quotes · Customer login & registration",
+    "link": "https://vees-sparkles.onrender.com/",
+    "url": "img/projects/vees-sparkles.jpg"
+  },
+  {
+    "title": "TC Tea Cakes",
+    "category": "Client site",
+    "summary": "An online storefront for a small-batch bakery: celebration cakes, giant muffins, scones and donuts.\n\nMenu with category filters · Cart & online ordering · Customer accounts",
+    "link": "https://teacakes.vercel.app/",
+    "url": "img/projects/tea-cakes.jpg"
+  },
+  {
+    "title": "Lavish Bites",
+    "category": "Client site",
+    "summary": "A food-ordering site for a fire-cooked braai brand, family-focused and flavour-filled.\n\nMenu & online ordering · Cart & customer sign-up · Hire-a-chef bookings",
+    "link": "https://lucianozambuko-gif.github.io/lavish-life/",
+    "url": "img/projects/lavish-bites.jpg"
+  },
+  {
+    "title": "S.I.C Growth",
+    "category": "Client site",
+    "summary": "A bold agency site for a content & growth partner working with South African artists, athletes and brands since 2016.\n\nPackages & process · Project showcase · Project booking",
+    "link": "https://lucianozambuko-gif.github.io/S.I.C/",
+    "url": "img/projects/sic.jpg"
+  },
+  {
+    "title": "Unako GBV Foundation",
+    "category": "Client site",
+    "summary": "A non-profit site for a youth development and GBV support centre being built in Mount Frere, Eastern Cape.\n\nSupport & helpline information · Ways to get involved · Fundraising for the centre",
+    "link": "https://lucianozambuko-gif.github.io/Unako/",
+    "url": "img/projects/unako.jpg"
+  }
+]

@@ -12,15 +12,6 @@
   const BANDS = [['#7a3cd6', '#250d4d'], ['#2b6be0', '#0a1f5c'], ['#d4322f', '#4a0a0e'], ['#14a394', '#053a35'],
     ['#ea7a1c', '#5a2305'], ['#c62f8e', '#4a0732'], ['#3c9c2a', '#0f3a0a'], ['#d9a520', '#4d3505']];
 
-  /* Shown only when there's no server behind the site (the static preview), so the design can still be judged. */
-  const SAMPLES = [
-    ['Album rollout', 'Artist'], ['Matchday content', 'Athlete'], ['Brand launch film', 'Brand'], ['Talk-show clips', 'Media personality'],
-    ['Red-carpet coverage', 'Actor'], ['Creator series', 'Influencer'], ['Tour diaries', 'Artist'], ['Product drop', 'Brand'],
-  ].map(([title, category]) => ({
-    title, category, client: '', year: '', link: '', url: null,
-    summary: 'Sample entry. Real projects, with their preview clips and write-ups, are added in S.I.C Studio under Projects.',
-  }));
-
   const grid = $('#cselect'), teams = $('#teams'), view = $('#pview');
   let items = [];
 
@@ -38,9 +29,8 @@
     return `<img class="logo" src="${LOGO}" alt="" style="--s:${1 + (i % 3) * 0.08};--fx:${i % 2 ? -1 : 1}">`;
   }
 
-  function render(rows, sample) {
+  function render(rows) {
     items = rows;
-    $('#sampleNote').hidden = !sample;
     $('#pEmpty').hidden = rows.length > 0;
     $('.arcade .hud').hidden = $('.select-head').hidden = !rows.length;
     $('#pCount').textContent = rows.length ? ` · ${String(rows.length).padStart(2, '0')}` : '';
@@ -222,11 +212,13 @@
   });
 
   /* ============ Load ============ */
-  fetch('/api/projects')
-    .then((r) => {
-      if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) throw new Error('no api');
-      return r.json();
-    })
-    .then((rows) => render(rows, false))
-    .catch(() => render(SAMPLES, true));
+  const json = (url) => fetch(url).then((r) => {
+    if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) throw new Error(`no data at ${url}`);
+    return r.json();
+  });
+  // No server behind the site (the static preview): show the starter projects the dashboard is seeded with.
+  json('/api/projects')
+    .catch(() => json('data/projects.json').then((rows) => rows.map((p) => ({ ...p, resource_type: 'image' }))))
+    .then((rows) => render(rows))
+    .catch((err) => { console.error('[projects]', err); render([]); });
 })();

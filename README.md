@@ -22,7 +22,7 @@ The S.I.C (Service Investment Connections) website with a working back end: enqu
 - **Enquiries:** a pipeline board (New, Contacted, Proposal sent, Won, Lost). Drag cards between columns, or open one to see the details, reply by email, WhatsApp or call, add team notes, or delete. You can search, filter and export to CSV.
 - **Referrals, Mailing list:** track statuses, remove entries and export subscribers to CSV.
 - **Packages:** add, edit, reorder, hide or highlight the "Growth, packaged" tiers. Changes go live on the site immediately.
-- **Projects:** add, edit, reorder or hide the work shown on `/projects`: name, client, category, year, write-up, an optional link, and a preview clip or photo (uploaded or linked).
+- **Projects:** add, edit, reorder or hide the work shown on `/projects`: name, client, category, year, write-up, an optional link, and a preview clip or photo (uploaded or linked). On first start the dashboard is filled with 8 starter projects (live systems and client sites) from `public/data/projects.json`. This happens once only, so anything you edit or delete stays that way.
 - **Showreel:** upload a video or photo (or paste a link) for the left or right hero phone, or for the "On the reel" strip. The strip stays hidden until it has at least one clip.
 - **Settings:** public email, alert email, WhatsApp number (shows a WhatsApp button on the site), Instagram, TikTok and YouTube links, and password change.
 
@@ -66,7 +66,7 @@ Smoke test (with the server running): `ADMIN_EMAIL=… ADMIN_PASSWORD=… npm ru
 
 ## Client preview (GitHub Pages)
 
-Every push to `main` publishes `public/` to <https://lucianozambuko-gif.github.io/S.I.C/> through `.github/workflows/pages.yml`. This is a front-end preview only. The site shows its built-in content, `/projects` shows labelled sample entries, the contact page hands the message to email (or WhatsApp) instead of saving it, the home-page forms can't submit, and `/admin` isn't published. The full app runs on Render.
+Every push to `main` publishes `public/` to <https://lucianozambuko-gif.github.io/S.I.C/> through `.github/workflows/pages.yml`. This is a front-end preview only. The site shows its built-in content, `/projects` shows the starter projects from `public/data/projects.json`, the contact page hands the message to email (or WhatsApp) instead of saving it, the home-page forms can't submit, and `/admin` isn't published. The full app runs on Render.
 
 ## Files
 

@@ -45,7 +45,8 @@ html,main{overflow-x:clip}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
 .brand img{width:44px;height:36px;object-fit:cover;mix-blend-mode:lighten}
-.brand b{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:.03em}
+.brand b{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:.03em;white-space:nowrap}
+.brand b span{text-transform:uppercase;color:transparent;background:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;animation:sheen 6s linear infinite}
 .nav nav{display:flex;gap:26px;font-size:14px;font-weight:600}
 .nav nav a{text-decoration:none;color:var(--dust);transition:color .2s}
 .nav nav a:hover{color:var(--bone)}
@@ -489,7 +490,9 @@ body.modal-open{overflow:hidden}
 body.menu-open{overflow:hidden}
 .menu-open header.nav{z-index:50} /* keep the close button above the overlay */
 @media(max-width:900px){.menu-btn{display:block}}
-@media(max-width:400px){.nav-end .btn{padding:9px 14px;font-size:13px}.nav-end .btn .ar{display:none}}
+.nav-end .btn{white-space:nowrap}
+@media(max-width:400px){.nav-end .btn{padding:9px 14px;font-size:13px}.nav-end .btn .ar{display:none}.nav .wrap{gap:10px}.brand{gap:6px}.brand img{width:34px;height:28px}.brand b{font-size:18px}}
+@media(max-width:340px){.brand img{display:none}}
 
 /* back to top (under the mobile menu, z 45) */
 .to-top{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));z-index:40;width:54px;height:54px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:rgba(21,18,15,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--bone);cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.45);opacity:0;transform:translateY(24px) scale(.7);pointer-events:none;transition:opacity .35s,transform .5s cubic-bezier(.2,.9,.3,1.4),background .3s,color .3s}
@@ -515,7 +518,6 @@ body.menu-open{overflow:hidden}
 /* ===== Projects page: fighter select ===== */
 .touch-only{display:none}
 @media(pointer:coarse){.fine-only{display:none}.touch-only{display:inline}}
-.sample-note{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--gold);border:1px dashed rgba(217,183,126,.4);border-radius:12px;padding:10px 14px;margin-top:14px}
 /* HUD: the game's counters, in the site's card style */
 .hud{display:grid;grid-template-columns:1.4fr auto 1fr;gap:1px;border:1px solid var(--line);border-radius:22px;background:var(--line);overflow:hidden;animation:fade .8s calc(var(--intro) + .4s) both}
 .hud-cell{display:grid;gap:10px;align-content:end;min-width:0;padding:20px 24px;background:var(--hide)}
@@ -553,6 +555,7 @@ body.menu-open{overflow:hidden}
 .f-bg::after{content:"";position:absolute;inset:-60%;background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.08) 0 4deg,transparent 4deg 14deg);opacity:0;transition:opacity .4s}
 .f-art{position:absolute;inset:6% 0 20%;display:grid;place-items:center}
 .f-art>*{width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.16) contrast(1.6);transition:filter .7s,transform .6s cubic-bezier(.2,.9,.2,1)}
+.f-art>.photo{object-position:50% 0}
 .f-art>.logo{object-fit:contain;mix-blend-mode:lighten;filter:grayscale(1) brightness(.4) contrast(1.3);transform:scale(var(--s,1)) scaleX(var(--fx,1))}
 .f-lock{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:10px;padding-bottom:22%;background:repeating-linear-gradient(0deg,rgba(0,0,0,.3) 0 2px,transparent 2px 4px);transition:opacity .4s .25s,transform .5s .25s}
 .f-lock b{font-family:var(--display);font-weight:400;font-size:clamp(40px,34cqi,76px);line-height:.9;color:transparent;background:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 16px var(--c1));animation:sheen 6s linear infinite,qbob 3s ease-in-out infinite}

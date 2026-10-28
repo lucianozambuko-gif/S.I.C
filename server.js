@@ -29,7 +29,7 @@ export const OPTIONS = {
 const LEAD_STATUS = ['new', 'contacted', 'proposal', 'won', 'lost'];
 const REFERRAL_STATUS = ['new', 'contacted', 'converted', 'rewarded'];
 const PLACEMENTS = ['hero-1', 'hero-2', 'showcase'];
-const PROJECT_CATEGORIES = OPTIONS.clientTypes.filter((c) => c !== 'Other');
+const PROJECT_CATEGORIES = [...OPTIONS.clientTypes.filter((c) => c !== 'Other'), 'Live system', 'Client site'];
 const PUBLIC_SETTING_KEYS = ['contact_email', 'whatsapp', 'instagram', 'tiktok', 'youtube'];
 
 const now = () => new Date().toISOString();

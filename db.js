@@ -91,6 +91,21 @@ export async function migrate() {
     }
   }
 
+  // Starter projects (the same file the static preview reads), added once only, so deleting them in Studio sticks.
+  const { changes: firstSeed } = await run("INSERT OR IGNORE INTO settings(key,value) VALUES('projects_seeded','1')");
+  if (firstSeed) {
+    const { n: projects } = await one('SELECT COUNT(*) AS n FROM projects');
+    if (!projects) {
+      const seed = JSON.parse(fs.readFileSync(new URL('./public/data/projects.json', import.meta.url), 'utf8'));
+      for (const [i, p] of seed.entries()) {
+        await run(
+          "INSERT INTO projects(title,category,summary,link,url,resource_type,sort,active,created_at) VALUES(?,?,?,?,?,'image',?,1,?)",
+          [p.title, p.category, p.summary, p.link, '/' + p.url, i + 1, new Date().toISOString()]
+        );
+      }
+    }
+  }
+
   for (const [key, value] of Object.entries(DEFAULT_SETTINGS)) {
     await run('INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)', [key, value]);
   }

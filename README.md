@@ -77,7 +77,6 @@ lib/                 auth (JWT cookie), mail (SMTP + email template), media (Clo
 public/index.html    The website
 public/projects.html Projects page (public/js/projects.js)
 public/contact.html  Contact page
-public/about.html    About page (S.I.C Growth intro and services)
 public/css/site.css  Site styles (luxury layer, modal, showreel)
 public/js/site.js    Animations, live content, forms
 public/admin/        S.I.C Studio dashboard

@@ -29,12 +29,22 @@
     return `<img class="logo" src="${LOGO}" alt="" style="--s:${1 + (i % 3) * 0.08};--fx:${i % 2 ? -1 : 1}">`;
   }
 
+  // Fighters per row: balanced rows (9 → 5 + 4, never 8 + 1), so a leftover fighter can't stretch across the page.
+  const wide = matchMedia('(min-width: 1100px)');
+  let shown = 0;
+  function setPer(k) {
+    shown = k;
+    const rows = Math.ceil(k / (wide.matches ? 10 : 6)) || 1;
+    grid.style.setProperty('--per', Math.ceil(k / rows) || 1);
+  }
+  wide.addEventListener('change', () => setPer(shown));
+
   function render(rows) {
     items = rows;
     $('#pEmpty').hidden = rows.length > 0;
     $('.arcade .hud').hidden = $('.select-head').hidden = !rows.length;
     $('#pCount').textContent = rows.length ? ` · ${String(rows.length).padStart(2, '0')}` : '';
-    grid.style.setProperty('--per', Math.min(rows.length, 8) || 1);
+    setPer(rows.length);
     grid.innerHTML = rows.map((p, i) => {
       const [c1, c2] = BANDS[i % BANDS.length];
       const open = unlocked.has(keyOf(p));
@@ -92,7 +102,7 @@
       if (!f.hidden && !reduce) f.animate([{ opacity: 0, translate: '0 -60px' }, { opacity: 1, translate: '0 0' }],
         { duration: 450, delay: k++ * 60, easing: 'cubic-bezier(.2,.9,.3,1.3)', fill: 'backwards' });
     });
-    grid.style.setProperty('--per', Math.min(k || 1, 8));
+    setPer(k);
   });
   const tEl = $('#hudTime');
   let t = 99;

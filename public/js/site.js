@@ -253,6 +253,27 @@
     $$('.statement h2 .w').forEach((w, i) => w.style.setProperty('--d', i * 0.07 + 's'));
   }
 
+  /* Services jigsaw: pieces assemble as they scroll in; the seams flash when the last one locks. */
+  const board = $('#svcGrid');
+  if (board && !reduce) {
+    const pieces = $$('.svc', board);
+    let left = pieces.length;
+    board.classList.add('pz-wait');
+    const io2 = new IntersectionObserver((es) => {
+      es.filter((e) => e.isIntersecting).forEach((e, i) => {
+        io2.unobserve(e.target);
+        e.target.style.setProperty('--pd', i * 0.14 + 's');
+        e.target.classList.add('pz-in');
+      });
+    }, { rootMargin: '0px 0px -12% 0px' });
+    pieces.forEach((p) => {
+      io2.observe(p);
+      p.addEventListener('animationend', (e) => {
+        if (e.target === p && e.animationName === 'pzIn' && --left === 0) board.classList.add('pz-done');
+      });
+    });
+  }
+
   $('#yr').textContent = new Date().getFullYear();
 
   /* ============ API helper ============ */

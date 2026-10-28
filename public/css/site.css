@@ -167,6 +167,7 @@ html,main{overflow-x:clip}
   .sk.hot::before{opacity:1}
   @keyframes sweep{from{--mx:-40%;--my:20%}}
   .sk.hot svg{transform:scale(1.15) rotate(-8deg)}
+  .svc.pz-in.hot{animation:pzIn .95s var(--pd,0s) cubic-bezier(.2,.8,.25,1) both,sweep 1.6s cubic-bezier(.2,.9,.2,1)} /* keep the assembly running */
   .tier.hot{transform:translateY(-8px);border-color:rgba(242,166,74,.5)}
   .row.hot::before{transform:scaleY(1)}
   .row.hot h3{transform:translateX(18px);color:#1a0f06}
@@ -194,10 +195,46 @@ html,main{overflow-x:clip}
 .sk.svc{justify-content:flex-start}
 .sk.svc h3{font-size:clamp(30px,3vw,40px);margin-top:56px}
 .sk.svc .d{font-family:inherit;font-size:16px;letter-spacing:0;text-transform:none;color:#d4cabd;margin-top:14px;max-width:46ch}
+
+/* services as a jigsaw: each tab straddles a seam (covering it) and bulges into the neighbouring piece,
+   so cards can't clip their contents; the corner pieces carry the board's rounded corners instead */
+.svc-grid{overflow:visible}
+.sk.svc{overflow:visible}
+.sk.svc::before{border-radius:inherit}
+.svc:nth-child(1){border-radius:22px 0 0 0}.svc:nth-child(3){border-radius:0 22px 0 0}
+.svc:nth-child(4){border-radius:0 0 0 22px}.svc:nth-child(5){border-radius:0 0 22px 0}
+.pz-k{--k:34px;display:none;position:absolute;z-index:2;width:var(--k);height:var(--k);border-radius:50%;background:var(--night);border:1px solid var(--line);pointer-events:none}
+/* which edges carry a tab (desktop 3 + 2 board) */
+.svc:nth-child(1) .pz-l,.svc:nth-child(4) .pz-l{display:block;right:calc(var(--k) / -2);top:50%;margin-top:calc(var(--k) / -2);clip-path:inset(-2px -2px -2px calc(var(--k) / 2 - 1px))}
+.svc:nth-child(3) .pz-l{display:block;left:calc(var(--k) / -2);top:50%;margin-top:calc(var(--k) / -2);clip-path:inset(-2px calc(var(--k) / 2 - 1px) -2px -2px)}
+.svc:nth-child(1) .pz-t,.svc:nth-child(3) .pz-t{display:block;bottom:calc(var(--k) / -2);left:50%;margin-left:calc(var(--k) / -2);clip-path:inset(calc(var(--k) / 2 - 1px) -2px -2px -2px)}
+/* assembly: pieces fly in from scattered, tilted spots and snap together; the seams flash once the last one locks */
+.svc{--px:0px;--py:-160px;--pr:8deg}
+.svc:nth-child(1){--px:-190px;--py:-120px;--pr:-14deg}.svc:nth-child(2){--px:0px;--py:-210px;--pr:9deg}.svc:nth-child(3){--px:190px;--py:-120px;--pr:13deg}
+.svc:nth-child(4){--px:-210px;--py:150px;--pr:-10deg}.svc:nth-child(5){--px:210px;--py:150px;--pr:11deg}
+.pz-wait .svc:not(.pz-in){opacity:0}
+/* a piece with tabs stacks above the pieces its tabs reach into */
+.svc:nth-child(1),.svc:nth-child(3){z-index:3}.svc:nth-child(4){z-index:2}.svc:nth-child(2),.svc:nth-child(5){z-index:1}
+.svc.pz-in{animation:pzIn .95s var(--pd,0s) cubic-bezier(.2,.8,.25,1) both}
+@keyframes pzIn{0%{opacity:0;translate:var(--px) var(--py);rotate:var(--pr);scale:.9}45%{opacity:1}80%{translate:0 0;rotate:0deg;scale:1.03}90%{scale:.99}100%{opacity:1;translate:0 0;rotate:0deg;scale:1}}
+.pz-done{animation:seam 1.3s ease-out}
+.pz-done .pz-k{animation:seamK 1.3s ease-out}
+@keyframes seam{30%{background-color:rgba(242,166,74,.85);border-color:rgba(242,166,74,.85);box-shadow:0 0 50px rgba(242,166,74,.3)}}
+@keyframes seamK{30%{border-color:rgba(242,166,74,.85)}}
+
 @media(max-width:900px){
   .svc-grid{grid-template-columns:1fr}
   .sk.svc,.sk.svc:nth-child(n+4){grid-column:auto;min-height:0;padding:26px 20px}
   .sk.svc h3{margin-top:22px}
+  /* one column: a tab on every bottom seam, alternating sides */
+  .svc:nth-child(n){border-radius:0}
+  .svc:nth-child(1){border-radius:22px 22px 0 0}.svc:nth-child(5){border-radius:0 0 22px 22px}
+  .svc .pz-l{display:none!important}
+  .svc:nth-child(-n+4) .pz-t{display:block;bottom:calc(var(--k) / -2);left:30%;margin-left:calc(var(--k) / -2);clip-path:inset(calc(var(--k) / 2 - 1px) -2px -2px -2px)}
+  .svc:nth-child(even) .pz-t{left:70%}
+  .svc:nth-child(odd){--px:-70px;--pr:-7deg}.svc:nth-child(even){--px:70px;--pr:7deg}
+  .svc:nth-child(n){--py:60px}
+  .svc:nth-child(1){z-index:5}.svc:nth-child(2){z-index:4}.svc:nth-child(3){z-index:3}.svc:nth-child(4){z-index:2}.svc:nth-child(5){z-index:1}
 }
 .sk{position:relative;background:var(--night);padding:30px 24px 28px;min-height:190px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;cursor:default}
 @property --mx{syntax:'<length-percentage>';inherits:true;initial-value:50%}

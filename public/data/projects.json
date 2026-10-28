@@ -35,11 +35,11 @@
     "url": "img/projects/tea-cakes.jpg"
   },
   {
-    "title": "S.I.C Growth",
-    "category": "Client site",
-    "summary": "A bold agency site for a content & growth partner working with South African artists, athletes and brands since 2016.\n\nPackages & process · Project showcase · Project booking",
-    "link": "https://lucianozambuko-gif.github.io/S.I.C/",
-    "url": "img/projects/sic.jpg"
+    "title": "Max Meal POS",
+    "category": "Live system",
+    "summary": "A multi-outlet point of sale for Max Meal. Staff pick their outlet and name, sign in with a PIN and sell from a fullscreen till.\n\nMulti-outlet selling · Staff PIN sign-in · Manager sign-in · Fullscreen till mode",
+    "link": "https://maxmeal.online/pos/sell",
+    "url": "img/projects/maxmeal.png"
   },
   {
     "title": "Unako GBV Foundation",

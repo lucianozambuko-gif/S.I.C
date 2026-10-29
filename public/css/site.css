@@ -254,6 +254,8 @@ html,main{overflow-x:clip}
 .niche h3{font-size:clamp(48px,6vw,80px);color:var(--amber);margin-top:10px;position:relative;z-index:1}
 .niche .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);margin-top:26px;position:relative;z-index:1}
 .niche p{color:#d4cabd;margin-top:8px;position:relative;z-index:1}
+.niche h3.long{font-size:clamp(34px,3.6vw,54px);line-height:.95}
+.niche-cta{position:relative;z-index:1;margin-top:30px}
 
 /* clipping */
 .clip{background:var(--copper);color:#1a0f06;overflow:hidden}

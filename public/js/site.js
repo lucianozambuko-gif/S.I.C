@@ -267,6 +267,30 @@
     bgVids.forEach((v) => vio.observe(v));
   }
 
+  /* Roster dropdowns: one open at a time; panels stay open if this script doesn't run. */
+  const roster = $('.roster');
+  if (roster) {
+    roster.classList.add('acc');
+    const setOpen = (row, on) => {
+      row.classList.toggle('open', on);
+      $('.row-btn', row).setAttribute('aria-expanded', String(on));
+    };
+    $$('.row', roster).forEach((r) => setOpen(r, false));
+    roster.addEventListener('click', (e) => {
+      const btn = e.target.closest('.row-btn');
+      if (!btn) return;
+      const row = btn.closest('.row'), on = !row.classList.contains('open');
+      $$('.row.open', roster).forEach((r) => setOpen(r, false));
+      setOpen(row, on);
+      if (!on) return;
+      // A panel closing above moves this row up, so bring it back into view once the layout settles.
+      setTimeout(() => {
+        const top = btn.getBoundingClientRect().top;
+        if (top < 70) scrollBy({ top: top - 90, behavior: reduce ? 'auto' : 'smooth' });
+      }, reduce ? 0 : 640);
+    });
+  }
+
   /* Services jigsaw: pieces assemble as they scroll in; the seams flash when the last one locks. */
   const board = $('#svcGrid');
   if (board && !reduce) {

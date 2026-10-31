@@ -206,15 +206,31 @@
 
   /* ============ Clipping demo ============ */
   const lf = $('#longform'), sh = $('#shorts');
-  const plats = ['TikTok', 'Reels', 'Shorts', 'TikTok', 'Reels'];
-  if (lf) [0.14, 0.31, 0.5, 0.68, 0.85].forEach((p, i) => {
+  const plats = ['TikTok', 'Reels', 'Shorts', 'TikTok'];
+  if (lf) [0.16, 0.38, 0.62, 0.84].forEach((p, i) => {
     const c = document.createElement('i');
     c.className = 'cut'; c.style.left = p * 100 + '%'; c.style.animationDelay = p * 4 - 4 + 's';
     lf.appendChild(c);
     const d = document.createElement('div');
     d.dataset.p = plats[i]; d.style.animationDelay = p * 4 - 3.6 + 's';
+    const img = document.createElement('img');
+    img.src = `img/clips/clip-${i + 1}.jpg`; img.alt = ''; img.loading = 'lazy';
+    d.appendChild(img);
     sh.appendChild(d);
   });
+
+  // Read more: the extra copy stays visible if this script never runs.
+  const moreBtn = $('#clipMoreBtn'), more = $('#clipMore');
+  if (moreBtn && more) {
+    const setMore = (open) => {
+      more.hidden = !open;
+      moreBtn.setAttribute('aria-expanded', open);
+      moreBtn.textContent = open ? 'Read less' : 'Read more';
+    };
+    setMore(false);
+    moreBtn.hidden = false;
+    moreBtn.addEventListener('click', () => setMore(more.hidden));
+  }
   const tc = $('#tc'), t0 = performance.now();
   if (tc && !reduce) (function tick(n) {
     const s = Math.floor((((n - t0) % 4000) / 4000) * 2538);

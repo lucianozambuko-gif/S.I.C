@@ -1,3 +1,7 @@
+/*
+ * Author: Tony Zambuko, owner of Cloud Uko.
+ * (c) 2026 Cloud Uko. All rights reserved. All code and effects are owned by Cloud Uko. See NOTICE.
+ */
 import 'dotenv/config';
 import crypto from 'node:crypto';
 import path from 'node:path';

@@ -1,3 +1,7 @@
+/*
+ * Author: Tony Zambuko, owner of Cloud Uko.
+ * (c) 2026 Cloud Uko. All rights reserved. All code and effects are owned by Cloud Uko. See NOTICE.
+ */
 (() => {
   'use strict';
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;

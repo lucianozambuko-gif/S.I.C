@@ -1,3 +1,7 @@
+/*
+ * Author: Tony Zambuko, owner of Cloud Uko.
+ * (c) 2026 Cloud Uko. All rights reserved. All code and effects are owned by Cloud Uko. See NOTICE.
+ */
 // End-to-end API check against a running server: npm run smoke  (BASE, ADMIN_EMAIL, ADMIN_PASSWORD from env)
 const BASE = process.env.BASE || 'http://localhost:3000';
 let cookie = '';

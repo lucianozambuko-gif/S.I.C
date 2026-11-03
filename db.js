@@ -69,7 +69,7 @@ const schema = [
 ];
 
 export const DEFAULT_SETTINGS = {
-  contact_email: 'hello@sicagency.com',
+  contact_email: 'info@sicgrowth.com',
   whatsapp: '',
   instagram: '',
   tiktok: '',

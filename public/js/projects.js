@@ -27,7 +27,7 @@
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...unlocked])); } catch { /* private mode: progress just isn't kept */ } };
 
   function art(p, i, ctx) {
-    if (p.url && p.resource_type === 'image') return `<img class="photo" src="${esc(p.url)}" alt="" loading="lazy">`;
+    if (p.url && p.resource_type === 'image') return `<img class="photo" src="${esc(p.url)}" alt="${esc(p.title)}" loading="lazy">`;
     if (p.url) return `<video class="photo" src="${esc(p.url)}" muted loop playsinline preload="metadata" ${ctx === 'view' ? 'controls autoplay' : ''}></video>`;
     // No media yet: the S.I.C mark, nudged and mirrored per fighter so a repeated logo doesn't read as copies.
     return `<img class="logo" src="${LOGO}" alt="" style="--s:${1 + (i % 3) * 0.08};--fx:${i % 2 ? -1 : 1}">`;

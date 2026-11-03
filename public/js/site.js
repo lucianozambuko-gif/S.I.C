@@ -218,7 +218,7 @@
     const d = document.createElement('div');
     d.dataset.p = plats[i]; d.style.animationDelay = p * 4 - 3.6 + 's';
     const img = document.createElement('img');
-    img.src = `img/clips/clip-${i + 1}.jpg`; img.alt = ''; img.loading = 'lazy';
+    img.src = `img/clips/clip-${i + 1}.jpg`; img.alt = ''; img.loading = 'lazy'; img.width = 360; img.height = 640;
     d.appendChild(img);
     sh.appendChild(d);
   });

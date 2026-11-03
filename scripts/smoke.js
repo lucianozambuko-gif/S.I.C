@@ -81,7 +81,7 @@ r = await call('/api/projects');
 ok(r.data.some((p) => p.id === projId && p.demo === 1 && p.category === 'Live system'), 'demo setting saves and is public');
 await call(`/api/admin/projects/${projId}`, { method: 'DELETE' });
 
-r = await call('/api/admin/settings', { method: 'PUT', body: { contact_email: 'hello@sicagency.com', whatsapp: '082 123 4567', instagram: 'https://instagram.com/sic' } });
+r = await call('/api/admin/settings', { method: 'PUT', body: { contact_email: 'info@sicgrowth.com', whatsapp: '082 123 4567', instagram: 'https://instagram.com/sic' } });
 ok(r.status === 200 && r.data.whatsapp === '0821234567', 'settings saved');
 r = await call('/api/content');
 ok(r.data.settings.instagram === 'https://instagram.com/sic' && !('notify_email' in r.data.settings), 'public settings exclude private keys');

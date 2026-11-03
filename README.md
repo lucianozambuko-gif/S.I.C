@@ -53,7 +53,7 @@ Smoke test (with the server running): `ADMIN_EMAIL=… ADMIN_PASSWORD=… npm ru
 3. **Render:** go to New → **Blueprint** and pick the repo. Render reads `render.yaml` and asks for:
    - `ADMIN_EMAIL`, `ADMIN_PASSWORD`: your first login. Change the password in Settings afterwards.
    - `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`
-   - `PUBLIC_URL`: for example `https://sic-growth.onrender.com`, or the custom domain once it's connected.
+   - `PUBLIC_URL`: `https://www.sicgrowth.com` once the domain is connected; until then the `onrender.com` address.
    - **Email:** `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`.
      - Gmail: `smtp.gmail.com`, port `465`, with an App Password (not your normal password).
      - Brevo: `smtp-relay.brevo.com`, port `587`.
@@ -83,3 +83,11 @@ public/admin/        S.I.C Studio dashboard
 render.yaml          Render Blueprint
 scripts/smoke.js     End-to-end API check
 ```
+
+## SEO
+
+- Canonical and social URLs, `public/robots.txt` and `public/sitemap.xml` use `https://www.sicgrowth.com`. Change them together if the domain changes.
+- Add new public pages to `sitemap.xml`.
+- `public/projects.html` holds a static project list for crawlers and visitors without JavaScript. Update it when `public/data/projects.json` changes.
+- Fonts are self-hosted in `public/fonts`; their licences are in `public/fonts/OFL.txt`.
+- After launch: verify the domain in Google Search Console and submit `sitemap.xml`.

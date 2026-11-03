@@ -27,9 +27,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - id: pages
+        uses: actions/configure-pages@v5
+
       - name: Build static site
         env:
-          BASE: /${{ github.event.repository.name }}/
+          # "/S.I.C/" on lucianozambuko-gif.github.io; "/" once a custom domain is set in Settings → Pages
+          BASE: ${{ steps.pages.outputs.base_path }}/
         run: |
           mkdir _site
           cp -r public/. _site/
@@ -39,7 +43,6 @@ jobs:
           # Pages caches files for 10 minutes; a per-commit query makes phones fetch fresh CSS/JS
           sed -i -E "s#(${BASE}(css|js)/[a-z-]+\.(css|js))\"#\1?v=${GITHUB_SHA::7}\"#g" _site/*.html
 
-      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

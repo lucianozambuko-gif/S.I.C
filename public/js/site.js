@@ -553,7 +553,7 @@
   /* Everything below drives the home page's modal forms and mailing list. */
   const modal = $('#modal');
   if (!modal) return;
-  const eForm = $('#enquiryForm'), rForm = $('#referralForm'), done = $('#mDone');
+  const eForm = $('#enquiryForm'), rForm = $('#referralForm'), done = $('#mDone'), off = $('#mOffline');
   const COPY = {
     enquiry: { crest: 'ENQUIRY', title: 'Start a project', lede: 'Tell us who you are and what you want to grow. We reply within one working day.', button: 'Send enquiry' },
     private: { crest: 'PRIVATE DESK · BY INVITATION', title: 'Request a private consultation', lede: 'A senior member of our team will contact you personally, in the way you prefer.', button: 'Request consultation' },
@@ -573,7 +573,7 @@
     $('#mTitle').textContent = c.title;
     $('#mLede').textContent = c.lede;
     $('.m-head', modal).hidden = false;
-    done.hidden = true;
+    done.hidden = off.hidden = true;
     const isRef = mode === 'referral';
     eForm.hidden = isRef; rForm.hidden = !isRef;
     const form = isRef ? rForm : eForm;
@@ -627,15 +627,34 @@
     return true;
   }
 
-  async function submitForm(form, url, success) {
+  // No server behind this copy of the site: hand the message to email or WhatsApp instead of losing it.
+  function handOff(form, { subject, body }) {
+    $('#mOffMail').href = `mailto:${mail.textContent.trim()}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const wa = $('#mOffWa');
+    wa.hidden = !waNumber;
+    if (waNumber) wa.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(`${subject}\n\n${body}`)}`;
+    $('.m-head', modal).hidden = true;
+    form.hidden = true;
+    off.hidden = false;
+    modal.scrollTop = 0;
+  }
+  $('[data-back]', off).addEventListener('click', () => {
+    off.hidden = true;
+    $('.m-head', modal).hidden = false;
+    (rForm.dataset.last ? rForm : eForm).hidden = false;
+  });
+
+  async function submitForm(form, url, success, message) {
     clearErrors(form);
     if (!validateLocally(form)) return;
     const btn = $('button[type=submit]', form);
     const label = btn.firstChild.textContent;
     btn.disabled = true;
     btn.firstChild.textContent = 'Sending… ';
+    rForm.dataset.last = form === rForm ? '1' : '';
+    const data = Object.fromEntries(new FormData(form));
     try {
-      await api(url, Object.fromEntries(new FormData(form)));
+      await api(url, data);
       $('.m-head', modal).hidden = true;
       form.hidden = true;
       $('#doneTitle').textContent = success.title;
@@ -644,12 +663,14 @@
       form.reset();
       fillAllSelects();
     } catch (err) {
-      showFieldError(form, err.field, err.message);
+      if (err.offline) handOff(form, message(data));
+      else showFieldError(form, err.field, err.message);
     } finally {
       btn.disabled = false;
       btn.firstChild.textContent = label;
     }
   }
+  const lines = (rows) => rows.filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`).join('\n');
 
   // Clear a field's error as soon as the visitor edits it.
   [eForm, rForm].forEach((form) => form.addEventListener('input', (e) => {
@@ -669,7 +690,11 @@
       text: priv
         ? 'Your request has gone straight to our senior team. Expect a personal reply within one working day.'
         : "Your enquiry is with our team. We'll reply within one working day, and a confirmation is on its way to your inbox.",
-    });
+    }, (d) => ({
+      subject: `${priv ? 'Private Desk request' : 'Project enquiry'}: ${d.name}`,
+      body: lines([['Name', d.name], ['Email', d.email], ['Phone', d.phone], ['What I do', d.client_type], ['Social', d.handle],
+        ['Audience', d.audience], ['Package', d.package], ['Budget', d.budget], ['Best way to reach me', d.contact_pref]]) + `\n\n${d.message}`,
+    }));
   });
   rForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -677,32 +702,11 @@
     submitForm(rForm, '/api/referrals', {
       title: 'Referral received.',
       text: `We'll reach out to ${them}. Once they come on board, your next video is clipped free.`,
-    });
-  });
-
-  /* ============ Mailing list ============ */
-  const lForm = $('#listForm'), lDone = $('#done');
-  lForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const v = lForm.email.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
-      lDone.style.color = '#F0937A';
-      lDone.textContent = 'Enter a full email address, like name@domain.co.za.';
-      return;
-    }
-    const btn = $('button', lForm);
-    btn.disabled = true;
-    try {
-      const r = await api('/api/subscribe', { email: v, website: lForm.website.value });
-      lDone.style.color = '';
-      lDone.textContent = r.already ? "You're already on the list." : "You're on the list. Check your inbox for a welcome note.";
-      lForm.reset();
-    } catch (err) {
-      lDone.style.color = '#F0937A';
-      lDone.textContent = err.message;
-    } finally {
-      btn.disabled = false;
-    }
+    }, (d) => ({
+      subject: `Referral: ${d.referred_name} from ${d.referrer_name}`,
+      body: lines([['My name', d.referrer_name], ['My email', d.referrer_email], ['Referring', d.referred_name],
+        ['Their contact', d.referred_contact], ['What they do', d.referred_type]]) + (d.notes ? `\n\n${d.notes}` : ''),
+    }));
   });
 
   // Deep link: /#enquire, /#private or /#refer opens the matching form.

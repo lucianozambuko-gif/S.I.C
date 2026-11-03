@@ -64,9 +64,18 @@ Smoke test (with the server running): `ADMIN_EMAIL=… ADMIN_PASSWORD=… npm ru
 
 > On Render's free plan, the service sleeps after 15 minutes without traffic, so the first visit after that takes a few seconds. For an A-list launch, use the Starter plan so the site is always awake.
 
-## Client preview (GitHub Pages)
+## Live site (GitHub Pages)
 
-Every push to `main` publishes `public/` to <https://lucianozambuko-gif.github.io/S.I.C/> through `.github/workflows/pages.yml`. This is a front-end preview only. The site shows its built-in content, `/projects` shows the starter projects from `public/data/projects.json`, the contact page hands the message to email (or WhatsApp) instead of saving it, the home-page forms can't submit, and `/admin` isn't published. The full app runs on Render.
+The public site is hosted on GitHub Pages; Render and Turso are optional and only needed for S.I.C Studio. Every push to `main` publishes `public/` through `.github/workflows/pages.yml`, currently to <https://lucianozambuko-gif.github.io/S.I.C/>.
+
+Without the server, the site shows its built-in content, `/projects` shows the projects from `public/data/projects.json`, every enquiry and referral form hands the message to email (or WhatsApp, when a number is set) with everything already filled in, and `/admin` isn't published.
+
+**Custom domain (`www.sicgrowth.com`):**
+
+1. At the domain registrar, add a `CNAME` record for `www` → `lucianozambuko-gif.github.io`, and four `A` records for `sicgrowth.com` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`.
+2. In the repo, go to Settings → Pages, set the custom domain to `www.sicgrowth.com`, and tick **Enforce HTTPS** once it's offered.
+3. The build picks up the new base path (`/` instead of `/S.I.C/`) automatically; push any commit or re-run the workflow.
+4. Set up the `info@sicgrowth.com` mailbox, since the contact forms send to it.
 
 ## Files
 

@@ -297,21 +297,6 @@
   </div>
 </section>
 
-<section class="list gut">
-  <div class="wrap">
-    <span class="eyebrow rv">The list</span>
-    <h2 class="rv" style="margin-top:18px">Platforms change. Your list doesn't.</h2>
-    <p class="rv">Algorithms shift and reach gets throttled without warning. An email list is the one audience you actually own, so we build one alongside every campaign we run.</p>
-    <form class="form rv" id="listForm" novalidate>
-      <div class="hp" aria-hidden="true"><label for="lWeb">Leave empty</label><input id="lWeb" name="website" tabindex="-1" autocomplete="off"></div>
-      <label for="email" style="position:absolute;left:-9999px">Email</label>
-      <input type="email" id="email" name="email" placeholder="Your email" required autocomplete="email">
-      <button class="btn" type="submit">Join the list <span class="ar">→</span></button>
-    </form>
-    <p class="done" id="done" aria-live="polite"></p>
-  </div>
-</section>
-
 <section class="final gut" id="contact">
   <div class="wrap">
     <h2>Let's scale<span>what you've built.</span></h2>
@@ -393,6 +378,16 @@
     <h3 id="doneTitle">Received.</h3>
     <p id="doneText"></p>
     <button class="btn ghost" type="button" data-close>Back to the site</button>
+  </div>
+
+  <div class="m-done" id="mOffline" hidden>
+    <h3>Almost there.</h3>
+    <p>Our online form isn't available right now, so your message hasn't been sent yet. Send it in one tap; everything you typed is already filled in.</p>
+    <div class="m-actions" style="justify-content:center">
+      <a class="btn" id="mOffMail" href="#">Send by email <span class="ar">→</span></a>
+      <a class="btn ghost" id="mOffWa" href="#" target="_blank" rel="noopener" hidden>Send on WhatsApp</a>
+    </div>
+    <button class="link-btn" type="button" data-back>Back to the form</button>
   </div>
 </dialog>
 </body>

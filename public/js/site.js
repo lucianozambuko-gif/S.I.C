@@ -242,10 +242,6 @@
     requestAnimationFrame(tick);
   })(t0);
 
-  const cc = $('#clipCount');
-  let clips = 24;
-  if (cc && !reduce) setInterval(() => { clips = clips >= 96 ? 24 : clips + 1; cc.textContent = clips; }, 1400);
-
   /* Count-up numbers: the final value is already in the markup. */
   const io = new IntersectionObserver((es) => es.forEach((e) => {
     if (!e.isIntersecting || reduce) return;

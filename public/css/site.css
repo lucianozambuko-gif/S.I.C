@@ -284,6 +284,19 @@ html,main{overflow-x:clip}
 .niche h3.long{font-size:clamp(34px,3.6vw,54px);line-height:.95}
 .niche-cta{position:relative;z-index:1;margin-top:30px}
 
+/* marketing channels: same card language as the services board */
+.mkt-head{display:grid;grid-template-columns:1.15fr 1fr;gap:18px 60px;align-items:end;margin-bottom:44px}
+.mkt-head .eyebrow{grid-column:1/-1}
+.mkt-head h2{font-size:clamp(40px,6vw,84px)}
+.mkt-head p{color:var(--dust);font-size:18px;max-width:46ch}
+.mkt-head .btn{margin-top:24px}
+.mkt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.sk.mk{min-height:250px;padding:30px 26px;justify-content:flex-start}
+.sk.mk h3{font-size:clamp(26px,2.6vw,34px);margin-top:44px}
+.sk.mk .d{font-family:inherit;font-size:16px;letter-spacing:0;text-transform:none;color:#d4cabd;margin-top:12px;max-width:40ch}
+@media(max-width:900px){.mkt-head{grid-template-columns:1fr}.mkt-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.mkt-grid{grid-template-columns:1fr}.sk.mk{min-height:0}.sk.mk h3{margin-top:28px}}
+
 /* clipping */
 .clip{background:var(--copper);color:#1a0f06;overflow:hidden}
 .clip .wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,70px);align-items:center}

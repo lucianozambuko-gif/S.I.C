@@ -11,7 +11,7 @@
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
   // Relative, so it resolves under a sub-path (GitHub Pages) as well as at the root.
-  const LOGO = 'img/sic-mark.jpg';
+  const LOGO = 'img/sic-logo.webp';
   // Fighter-select colour bands: [light, dark].
   const BANDS = [['#7a3cd6', '#250d4d'], ['#2b6be0', '#0a1f5c'], ['#d4322f', '#4a0a0e'], ['#14a394', '#053a35'],
     ['#ea7a1c', '#5a2305'], ['#c62f8e', '#4a0732'], ['#3c9c2a', '#0f3a0a'], ['#d9a520', '#4d3505']];

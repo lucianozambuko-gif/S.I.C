@@ -174,8 +174,12 @@
     // Hover effects play as each card passes through the middle of the screen.
     const mid = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('hot', e.isIntersecting)),
       { rootMargin: '-38% 0px -38% 0px' });
-    const watchHot = () => $$('.sk,.tier,.row,.pillar,.ccard').forEach((el) => mid.observe(el));
+    const watchHot = () => $$('.sk,.tier,.pillar,.ccard').forEach((el) => mid.observe(el));
     watchHot();
+    // Roster rows are short on phones, so a thin band at the centre lights one row at a time.
+    const midRow = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('hot', e.isIntersecting)),
+      { rootMargin: '-49% 0px -49% 0px' });
+    $$('.row').forEach((el) => midRow.observe(el));
     if ($('#tiers')) new MutationObserver(watchHot).observe($('#tiers'), { childList: true });
 
     // Tilt: phone motion sensor where allowed, a slow sway otherwise.

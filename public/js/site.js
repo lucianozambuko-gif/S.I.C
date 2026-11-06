@@ -541,8 +541,8 @@
       const onSent = () => {
         $('#cDoneTitle').textContent = `Thank you, ${data.name.trim().split(' ')[0]}.`;
         $('#cDoneText').textContent = data.kind === 'private'
-          ? 'Your request has gone straight to our senior team. Expect a personal reply within one working day.'
-          : "Your enquiry is with our team. We'll reply within one working day, and a confirmation is on its way to your inbox.";
+          ? 'Your request has gone straight to our senior team. A representative of S.I.C Growth will be in touch with you personally soon.'
+          : "Your enquiry is with our team. A representative of S.I.C Growth will get in touch with you soon.";
         cForm.reset();
         demo = '';
         setKind('enquiry');
@@ -716,8 +716,8 @@
     submitForm(eForm, '/api/leads', {
       title: `Thank you, ${first}.`,
       text: priv
-        ? 'Your request has gone straight to our senior team. Expect a personal reply within one working day.'
-        : "Your enquiry is with our team. We'll reply within one working day, and a confirmation is on its way to your inbox.",
+        ? 'Your request has gone straight to our senior team. A representative of S.I.C Growth will be in touch with you personally soon.'
+        : "Your enquiry is with our team. A representative of S.I.C Growth will get in touch with you soon.",
     }, (d) => ({
       subject: `${priv ? 'Private Desk request' : 'Project enquiry'}: ${d.name}`,
       body: lines([['Name', d.name], ['Email', d.email], ['Phone', d.phone], ['What I do', d.client_type], ['Social', d.handle],

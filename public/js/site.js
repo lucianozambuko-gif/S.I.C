@@ -353,6 +353,30 @@
     return data;
   }
 
+  /* ============ Static-host relay ============
+     When there's no server behind this copy of the site (e.g. GitHub Pages),
+     form messages go to Web3Forms, which emails them to info@sicgrowth.com.
+     Only if that also fails do we fall back to the email/WhatsApp hand-off. */
+  const WEB3FORMS_KEY = 'bce0ee43-43e0-4a14-9ff8-219cb1097104';
+  async function relay({ subject, body }, data) {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_KEY,
+        subject,
+        from_name: 'S.I.C Growth website',
+        name: data.name || data.referrer_name || '',
+        email: data.email || data.referrer_email || '',
+        replyto: data.email || data.referrer_email || '',
+        message: body,
+        botcheck: data.website || '',
+      }),
+    });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok || !out.success) throw new Error(out.message || 'Relay failed');
+  }
+
   /* ============ Live content from the dashboard ============ */
   function fillSelect(sel, list, placeholder) {
     const current = sel.value;
@@ -514,8 +538,7 @@
       const btn = $('button[type=submit]', cForm), label = btn.firstChild.textContent;
       btn.disabled = true;
       btn.firstChild.textContent = 'Sending… ';
-      try {
-        await api('/api/leads', data);
+      const onSent = () => {
         $('#cDoneTitle').textContent = `Thank you, ${data.name.trim().split(' ')[0]}.`;
         $('#cDoneText').textContent = data.kind === 'private'
           ? 'Your request has gone straight to our senior team. Expect a personal reply within one working day.'
@@ -525,6 +548,10 @@
         setKind('enquiry');
         fillAllSelects();
         show(cDone);
+      };
+      try {
+        await api('/api/leads', data);
+        onSent();
       } catch (err) {
         if (!err.offline) return showFieldError(cForm, err.field, err.message);
         // No server behind this copy of the site: hand the message to email or WhatsApp instead of losing it.
@@ -534,6 +561,7 @@
           data.budget && `Budget: ${data.budget}`, data.contact_pref && `Best way to reach me: ${data.contact_pref}`,
         ].filter(Boolean).join('\n') + `\n\n${data.message}`;
         const subject = `${data.kind === 'private' ? 'Private Desk request' : demo ? `Demo request (${demo})` : 'Project enquiry'}: ${data.name}`;
+        try { await relay({ subject, body }, data); return onSent(); } catch { /* fall through to hand-off */ }
         $('#offMail').href = `mailto:${mail.textContent.trim()}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         const offWa = $('#offWa');
         offWa.hidden = !waNumber;
@@ -649,8 +677,7 @@
     btn.firstChild.textContent = 'Sending… ';
     rForm.dataset.last = form === rForm ? '1' : '';
     const data = Object.fromEntries(new FormData(form));
-    try {
-      await api(url, data);
+    const onSent = () => {
       $('.m-head', modal).hidden = true;
       form.hidden = true;
       $('#doneTitle').textContent = success.title;
@@ -658,9 +685,14 @@
       done.hidden = false;
       form.reset();
       fillAllSelects();
+    };
+    try {
+      await api(url, data);
+      onSent();
     } catch (err) {
-      if (err.offline) handOff(form, message(data));
-      else showFieldError(form, err.field, err.message);
+      if (!err.offline) return showFieldError(form, err.field, err.message);
+      const msg = message(data);
+      try { await relay(msg, data); onSent(); } catch { handOff(form, msg); }
     } finally {
       btn.disabled = false;
       btn.firstChild.textContent = label;
